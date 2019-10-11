@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/personal_pictures"
-    android:numColumns="auto_fit"
-    android:gravity="center"
-    android:columnWidth="90dp"
-    android:verticalSpacing="24dp"
-    android:horizontalSpacing="10dp"
-    android:stretchMode="spacingWidthUniform"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</GridView>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/personal_recycler_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="3dp"
+        android:clipToPadding="true"/>
+
+</RelativeLayout>

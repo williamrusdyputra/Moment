@@ -30,4 +30,8 @@
     <string name="following">Following</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="capture">capture</string>
+    <string name="picture">picture</string>
+    <string name="username">Username</string>
+    <string name="description">Description</string>
+    <string name="submit">submit</string>
 </resources>

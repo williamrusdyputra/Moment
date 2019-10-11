@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragment.AddFragment">
+    tools:context="edu.bluejack19_1.moment.fragment.AddFragment">
 
     <TextureView
         android:id="@+id/texture"

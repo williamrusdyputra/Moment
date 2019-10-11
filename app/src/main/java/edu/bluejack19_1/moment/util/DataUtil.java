@@ -1,0 +1,36 @@
+package edu.bluejack19_1.moment.util;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.google.firebase.database.DatabaseReference;
+import edu.bluejack19_1.moment.R;
+import edu.bluejack19_1.moment.model.UserJSON;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class DataUtil {
+
+    public static String username = "";
+    public static UserJSON userJSON = new UserJSON();
+
+    public static void setSharedPreference(Context context, SharedPreferences sharedPref, String email, String password) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(R.string.user_pref), email);
+        editor.putString(context.getString(R.string.user_pass_pref), password);
+        editor.apply();
+    }
+
+    public static void storeUser(String email, DatabaseReference mDatabase) {
+        List<String> posts = new ArrayList<>();
+        String userID = mDatabase.push().getKey();
+        userJSON = new UserJSON(userID, email.split("@")[0],
+                0, 0, 0, "Hi, I am " + email.split("@")[0],
+                "", posts);
+        if (userID != null) {
+            mDatabase.child("users").child(userID).setValue(userJSON);
+        }
+    }
+
+}
