@@ -3,7 +3,14 @@ package edu.bluejack19_1.moment.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.model.UserJSON;
 
@@ -22,12 +29,36 @@ public class DataUtil {
         editor.apply();
     }
 
+    public static ArrayList<String> getUsers() {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        final ArrayList<String> us = new ArrayList<>();
+
+        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> usernames = new ArrayList<>();
+                for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                    String name = ds.child("username").getValue(String.class);
+                    usernames.add(name);
+                }
+                us.addAll(usernames);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        return us;
+    }
+
     public static void storeUser(String email, DatabaseReference mDatabase) {
-        List<String> posts = new ArrayList<>();
+        List<String> temp = new ArrayList<>();
         String userID = mDatabase.push().getKey();
         userJSON = new UserJSON(userID, email.split("@")[0],
                 0, 0, 0, "Hi, I am " + email.split("@")[0],
-                "", posts);
+                "", temp, temp, temp, temp, temp);
         if (userID != null) {
             mDatabase.child("users").child(userID).setValue(userJSON);
         }

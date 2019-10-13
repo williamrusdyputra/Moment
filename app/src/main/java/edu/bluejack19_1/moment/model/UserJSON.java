@@ -2,6 +2,7 @@ package edu.bluejack19_1.moment.model;
 
 import com.google.firebase.database.PropertyName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserJSON {
@@ -21,8 +22,19 @@ public class UserJSON {
     public String profilePictureUrl;
     @PropertyName("picture_urls")
     public List<String> pictureUrls;
+    @PropertyName("followings")
+    public List<String> followingIDs;
+    @PropertyName("followers")
+    public List<String> followerIDs;
+    @PropertyName("following_keys")
+    public List<String> followingIDKeys;
+    @PropertyName("follower_keys")
+    public List<String> followerIDKeys;
 
-    public UserJSON(String userID, String username, int postCount, int followerCount, int followingCount, String description, String profilePictureUrl, List<String> pictureUrls) {
+    public UserJSON(String userID, String username, int postCount, int followerCount, int followingCount,
+                    String description, String profilePictureUrl, List<String> pictureUrls,
+                    List<String> followerIDs, List<String> followingIDs, List<String> followingIDKeys,
+                    List<String> followerIDKeys) {
         this.userID = userID;
         this.username = username;
         this.postCount = postCount;
@@ -31,9 +43,16 @@ public class UserJSON {
         this.description = description;
         this.profilePictureUrl = profilePictureUrl;
         this.pictureUrls = pictureUrls;
+        this.followerIDs = followerIDs;
+        this.followingIDs = followingIDs;
+        this.followerIDKeys = followerIDKeys;
+        this.followingIDKeys = followingIDKeys;
     }
 
     public UserJSON() {
-        // required empty constructor
+        followingIDs = new ArrayList<>();
+        followerIDs = new ArrayList<>();
+        followingIDKeys = new ArrayList<>();
+        followerIDKeys = new ArrayList<>();
     }
 }

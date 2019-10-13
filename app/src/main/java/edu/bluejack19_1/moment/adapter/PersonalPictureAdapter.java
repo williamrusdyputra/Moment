@@ -21,12 +21,10 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
 
     private Context context;
     private ArrayList<Picture> pictures;
-    private ItemListener itemListener;
 
-    public PersonalPictureAdapter(Context context, ArrayList<Picture> pictures, ItemListener itemListener) {
+    public PersonalPictureAdapter(Context context, ArrayList<Picture> pictures) {
         this.context = context;
         this.pictures =pictures;
-        this.itemListener = itemListener;
     }
 
     public void setData(List<Picture> pictureList) {
@@ -48,7 +46,7 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
 
         Glide.with(context)
                 .load(picture.getUrl())
-                .override(500, 500) //1
+                .override(450, 450) //1
                 .centerCrop()
                 .into(holder.picture);
     }
@@ -58,26 +56,14 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
         return pictures.size();
     }
 
-    public class PersonalPictureHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class PersonalPictureHolder extends RecyclerView.ViewHolder {
 
-        Picture item;
         ImageView picture;
 
         PersonalPictureHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(this);
             picture = itemView.findViewById(R.id.picture);
         }
-
-        @Override
-        public void onClick(View view) {
-            if(itemListener != null)
-                itemListener.onItemClick(item);
-        }
-    }
-
-    public interface ItemListener {
-        void onItemClick(Picture picture);
     }
 }

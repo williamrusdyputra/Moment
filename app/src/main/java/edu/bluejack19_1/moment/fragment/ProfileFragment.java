@@ -18,9 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import edu.bluejack19_1.moment.LoginActivity;
+import edu.bluejack19_1.moment.EditProfileActivity;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.adapter.PersonalPictureAdapter;
 import edu.bluejack19_1.moment.model.Picture;
@@ -31,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ProfileFragment extends Fragment implements PersonalPictureAdapter.ItemListener {
+public class ProfileFragment extends Fragment {
 
     private PersonalPictureAdapter adapter;
     private RecyclerView myPictures;
@@ -59,7 +58,7 @@ public class ProfileFragment extends Fragment implements PersonalPictureAdapter.
         }
 
         myPictures = view.findViewById(R.id.personal_recycler_view);
-        adapter = new PersonalPictureAdapter(getContext(), pictures, this);
+        adapter = new PersonalPictureAdapter(getContext(), pictures);
         adapter.notifyDataSetChanged();
         myPictures.setAdapter(adapter);
 
@@ -101,7 +100,7 @@ public class ProfileFragment extends Fragment implements PersonalPictureAdapter.
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                Intent intent = new Intent(getActivity(), EditProfileActivity.class);
                 startActivity(intent);
             }
         });
@@ -151,14 +150,9 @@ public class ProfileFragment extends Fragment implements PersonalPictureAdapter.
         }
 
         if(!hidden) {
-            adapter = new PersonalPictureAdapter(getActivity(), pictures, this);
+            adapter = new PersonalPictureAdapter(getActivity(), pictures);
             adapter.notifyDataSetChanged();
             myPictures.setAdapter(adapter);
         }
-    }
-
-    @Override
-    public void onItemClick(Picture picture) {
-        Toast.makeText(getContext(), picture.getUrl() + " is clicked", Toast.LENGTH_SHORT).show();
     }
 }

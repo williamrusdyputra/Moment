@@ -1,6 +1,5 @@
 package edu.bluejack19_1.moment.viewmodel;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;

@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
+
 import edu.bluejack19_1.moment.util.DataUtil;
 import edu.bluejack19_1.moment.util.TextUtil;
 
@@ -94,24 +96,31 @@ public class SignUpActivity extends AppCompatActivity {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String email = emailText.getText().toString();
-                String password = passwordText.getText().toString();
+                final String email = emailText.getText().toString();
+                final String password = passwordText.getText().toString();
 
                 if(TextUtil.validate(email)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.email_error), Toast.LENGTH_SHORT).show();
                 } else {
                     DataUtil.setSharedPreference(getApplicationContext(), sharedPref, email, password);
-                    mAuth.createUserWithEmailAndPassword(email, password);
 
-                    DataUtil.storeUser(email, mDatabase);
-
-                    Intent homeIntent = new Intent(SignUpActivity.this, HomeActivity.class);
-                    DataUtil.username = email.split("@")[0];
-                    startActivity(homeIntent);
-                    finish();
+                    set(DataUtil.getUsers(), email, password);
                 }
             }
         });
+    }
+
+    private void set(ArrayList<String> usernames, String email, String password) {
+        if(usernames.contains(email.split("@")[0])) {
+            Toast.makeText(getApplicationContext(), "Account already exists, please login", Toast.LENGTH_SHORT).show();
+        } else {
+            mAuth.createUserWithEmailAndPassword(email, password);
+            DataUtil.storeUser(email, mDatabase);
+            Intent homeIntent = new Intent(SignUpActivity.this, HomeActivity.class);
+            DataUtil.username = email.split("@")[0];
+            startActivity(homeIntent);
+            finish();
+        }
     }
 
     private void checkRequiredFields() {

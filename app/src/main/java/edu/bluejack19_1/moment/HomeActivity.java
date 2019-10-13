@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -57,7 +61,7 @@ public class HomeActivity extends AppCompatActivity {
     private void setupData() {
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-        final String username = DataUtil.username;
+        final String username = DataUtil.userJSON.username;
 
         database.child("users").addValueEventListener(new ValueEventListener() {
             @SuppressWarnings("ConstantConditions")
@@ -76,11 +80,36 @@ public class HomeActivity extends AppCompatActivity {
                     Iterable<DataSnapshot> items = posts.getChildren();
                     ArrayList<String> postUrls = new ArrayList<>();
                     for(DataSnapshot item : items) {
-                        Log.d("UNIQUE", "IN");
                         postUrls.add(item.getValue(String.class));
                     }
 
-                    Log.d("UNIQUE", "IN2");
+                    DataSnapshot followings = ds.child("followings");
+                    items = followings.getChildren();
+                    ArrayList<String> followingIDs = new ArrayList<>();
+                    for(DataSnapshot item : items) {
+                        followingIDs.add(item.getValue(String.class));
+                    }
+
+                    DataSnapshot followers = ds.child("followers");
+                    items = followers.getChildren();
+                    ArrayList<String> followerIDs = new ArrayList<>();
+                    for(DataSnapshot item : items) {
+                        followerIDs.add(item.getValue(String.class));
+                    }
+
+                    DataSnapshot followerKeys = ds.child("follower_keys");
+                    items = followerKeys.getChildren();
+                    ArrayList<String> followerIDKeys = new ArrayList<>();
+                    for(DataSnapshot item : items) {
+                        followerIDKeys.add(item.getValue(String.class));
+                    }
+
+                    DataSnapshot followingKeys = ds.child("following_keys");
+                    items = followingKeys.getChildren();
+                    ArrayList<String> followingIDKeys = new ArrayList<>();
+                    for(DataSnapshot item : items) {
+                        followingIDKeys.add(item.getValue(String.class));
+                    }
 
                     DataUtil.userJSON.userID = userID;
                     DataUtil.userJSON.username = name;
@@ -90,6 +119,10 @@ public class HomeActivity extends AppCompatActivity {
                     DataUtil.userJSON.profilePictureUrl = url;
                     DataUtil.userJSON.description = description;
                     DataUtil.userJSON.pictureUrls = postUrls;
+                    DataUtil.userJSON.followerIDs = followerIDs;
+                    DataUtil.userJSON.followingIDs = followingIDs;
+                    DataUtil.userJSON.followerIDKeys = followerIDKeys;
+                    DataUtil.userJSON.followingIDKeys = followingIDKeys;
 
                     if(username.equals(name)) {
                         database.removeEventListener(this);
@@ -145,4 +178,26 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.actionbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == R.id.action_logout) {
+            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.user_pref_key), MODE_PRIVATE);
+            sharedPref.edit().clear().apply();
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -44,6 +44,7 @@ import org.json.JSONObject;
 import edu.bluejack19_1.moment.util.DataUtil;
 import edu.bluejack19_1.moment.util.TextUtil;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
@@ -175,8 +176,13 @@ public class LoginActivity extends AppCompatActivity {
                                                 try {
                                                     String email = object.getString("email");
                                                     DataUtil.setSharedPreference(getApplicationContext(), sharedPref, email, email.split("@")[0]);
-                                                    DataUtil.storeUser(Objects.requireNonNull(email), mDatabase);
-                                                    Log.d("UNIQUE", "YOMAN");
+
+                                                    ArrayList<String> users = DataUtil.getUsers();
+                                                    if(!users.contains(email.split("@")[0])) {
+                                                        DataUtil.storeUser(Objects.requireNonNull(email), mDatabase);
+                                                        mAuth.createUserWithEmailAndPassword(email, "test");
+                                                    }
+
                                                     gotoHome(email.split("@")[0]);
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
@@ -198,7 +204,6 @@ public class LoginActivity extends AppCompatActivity {
                             @Override
                             public void onError(FacebookException error) {
                                 // on error
-                                Log.d("UNIQUE", "YOMAN" + error);
                             }
                         });
             }
@@ -253,7 +258,13 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
                 DataUtil.setSharedPreference(this, sharedPref, account.getEmail(), account.getDisplayName());
-                DataUtil.storeUser(Objects.requireNonNull(account.getEmail()), mDatabase);
+
+                ArrayList<String> users = DataUtil.getUsers();
+                if(!users.contains(Objects.requireNonNull(account.getEmail()).split("@")[0])) {
+                    DataUtil.storeUser(Objects.requireNonNull(account.getEmail()), mDatabase);
+                    mAuth.createUserWithEmailAndPassword(account.getEmail(), "test");
+                }
+
                 DataUtil.userJSON.username = Objects.requireNonNull(account.getEmail()).split("@")[0];
             }
             gotoHome(Objects.requireNonNull(Objects.requireNonNull(account).getEmail()).split("@")[0]);

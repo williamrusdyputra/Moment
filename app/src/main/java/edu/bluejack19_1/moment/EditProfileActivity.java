@@ -26,6 +26,8 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
         textInputUsername = findViewById(R.id.text_input_username);
         final TextInputLayout textInputDescription = findViewById(R.id.text_input_description);
         submitButton = findViewById(R.id.edit_button);
