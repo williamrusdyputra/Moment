@@ -47,7 +47,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        setupData();
+        String name = getIntent().getStringExtra(EXTRA_DATA);
+        Log.d("UNIQUE", name + "SS");
+
+        setupData(name);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(true);
         Objects.requireNonNull(getSupportActionBar()).setTitle(DataUtil.userJSON.username);
@@ -58,10 +61,10 @@ public class HomeActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void setupData() {
+    private void setupData(String name) {
         final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-        final String username = DataUtil.userJSON.username;
+        final String username = name;
 
         database.child("users").addValueEventListener(new ValueEventListener() {
             @SuppressWarnings("ConstantConditions")

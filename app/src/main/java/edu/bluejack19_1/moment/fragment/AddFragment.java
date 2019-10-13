@@ -223,8 +223,6 @@ public class AddFragment extends Fragment {
                         out.flush();
                         out.close();
 
-                        // Tell the media scanner about the new file so that it is
-                        // immediately available to the user.
                         MediaScannerConnection.scanFile(getContext(), new String[] { imageFile.getAbsolutePath() }, null,new MediaScannerConnection.OnScanCompletedListener() {
                             public void onScanCompleted(String path, Uri uri) {
                                 Log.i("ExternalStorage", "Scanned " + path + ":");

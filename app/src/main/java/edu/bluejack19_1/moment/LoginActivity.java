@@ -35,8 +35,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
     private final static int RC_SIGN_IN = 2;
     private CallbackManager mCallbackManager;
     private SharedPreferences sharedPref;
-    private DatabaseReference mDatabase;
 
     private FirebaseAuth mAuth;
     private Button loginButton;
@@ -84,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.password_edit_text);
         TextView signUpText = findViewById(R.id.sign_up_text);
         TextView signUpText2 = findViewById(R.id.register_question);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         signUpText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +151,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void run() {
                     DataUtil.userJSON.username = sharedPref.getString(getString(R.string.user_pref), "error").split("@")[0];
                     Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+                    homeIntent.putExtra(HomeActivity.EXTRA_DATA, DataUtil.userJSON.username);
                     startActivity(homeIntent);
                     finish();
                 }
@@ -174,16 +176,32 @@ public class LoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onCompleted(JSONObject object, GraphResponse response) {
                                                 try {
-                                                    String email = object.getString("email");
+                                                    final String email = object.getString("email");
                                                     DataUtil.setSharedPreference(getApplicationContext(), sharedPref, email, email.split("@")[0]);
 
-                                                    ArrayList<String> users = DataUtil.getUsers();
-                                                    if(!users.contains(email.split("@")[0])) {
-                                                        DataUtil.storeUser(Objects.requireNonNull(email), mDatabase);
-                                                        mAuth.createUserWithEmailAndPassword(email, "test");
-                                                    }
+                                                    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-                                                    gotoHome(email.split("@")[0]);
+                                                    mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                            ArrayList<String> usernames = new ArrayList<>();
+                                                            for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                                String name = ds.child("username").getValue(String.class);
+                                                                usernames.add(name);
+                                                            }
+
+                                                            if(!usernames.contains(email.split("@")[0])) {
+                                                                DataUtil.storeUser(Objects.requireNonNull(email), mDatabase);
+                                                                mAuth.createUserWithEmailAndPassword(email, "socialmedia");
+                                                            }
+                                                            gotoHome(email.split("@")[0]);
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                        }
+                                                    });
                                                 } catch (JSONException e) {
                                                     e.printStackTrace();
                                                 }
@@ -255,19 +273,36 @@ public class LoginActivity extends AppCompatActivity {
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            final GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             if (account != null) {
-                DataUtil.setSharedPreference(this, sharedPref, account.getEmail(), account.getDisplayName());
+                final String email = account.getEmail();
+                DataUtil.setSharedPreference(this, sharedPref, email, account.getDisplayName());
 
-                ArrayList<String> users = DataUtil.getUsers();
-                if(!users.contains(Objects.requireNonNull(account.getEmail()).split("@")[0])) {
-                    DataUtil.storeUser(Objects.requireNonNull(account.getEmail()), mDatabase);
-                    mAuth.createUserWithEmailAndPassword(account.getEmail(), "test");
-                }
+                final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
+                mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        ArrayList<String> usernames = new ArrayList<>();
+                        for(DataSnapshot ds : dataSnapshot.getChildren()) {
+                            String name = ds.child("username").getValue(String.class);
+                            usernames.add(name);
+                        }
+
+                        assert email != null;
+                        if(!usernames.contains(email.split("@")[0])) {
+                            DataUtil.storeUser(Objects.requireNonNull(email), mDatabase);
+                            mAuth.createUserWithEmailAndPassword(email, "socialmedia");
+                        }
+                        gotoHome(Objects.requireNonNull(Objects.requireNonNull(account).getEmail()).split("@")[0]);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
                 DataUtil.userJSON.username = Objects.requireNonNull(account.getEmail()).split("@")[0];
             }
-            gotoHome(Objects.requireNonNull(Objects.requireNonNull(account).getEmail()).split("@")[0]);
         } catch (ApiException e) {
             Log.w("ERROR", "signInResult:failed code=" + e.getStatusCode());
         }
@@ -313,6 +348,7 @@ public class LoginActivity extends AppCompatActivity {
     private void gotoHome(String username) {
         Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
         homeIntent.putExtra(HomeActivity.EXTRA_DATA, username);
+        Log.d("UNIQUE", username + "RR");
         startActivity(homeIntent);
         finish();
     }

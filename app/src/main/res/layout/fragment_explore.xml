@@ -15,7 +15,7 @@
         android:layout_marginEnd="@dimen/horizontal_margin"
         app:cardUseCompatPadding="true"
         app:cardElevation="8dp"
-        app:cardCornerRadius="8dp">
+        app:cardCornerRadius="10dp">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view"

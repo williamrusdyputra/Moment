@@ -29,30 +29,6 @@ public class DataUtil {
         editor.apply();
     }
 
-    public static ArrayList<String> getUsers() {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        final ArrayList<String> us = new ArrayList<>();
-
-        mDatabase.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                ArrayList<String> usernames = new ArrayList<>();
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    String name = ds.child("username").getValue(String.class);
-                    usernames.add(name);
-                }
-                us.addAll(usernames);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        return us;
-    }
-
     public static void storeUser(String email, DatabaseReference mDatabase) {
         List<String> temp = new ArrayList<>();
         String userID = mDatabase.push().getKey();

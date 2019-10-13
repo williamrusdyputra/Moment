@@ -16,6 +16,7 @@ import java.util.List;
 
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.model.Picture;
+import edu.bluejack19_1.moment.util.Transformation;
 
 public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPictureAdapter.PersonalPictureHolder> {
 
@@ -48,6 +49,7 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
                 .load(picture.getUrl())
                 .override(450, 450) //1
                 .centerCrop()
+                .transform(new Transformation(90f))
                 .into(holder.picture);
     }
 

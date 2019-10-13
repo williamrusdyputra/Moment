@@ -10,10 +10,17 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,7 +69,64 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     DataUtil.userJSON.followingIDKeys.remove(key);
                     DataUtil.userJSON.followingIDs.remove(user.userID);
                     database.child("users").child(DataUtil.userJSON.userID).child("followings").child(key).removeValue();
-                    database.child("users").child(DataUtil.userJSON.userID).child("following_keys").child(key).removeValue();
+                    Query ref = database.child("users").child(DataUtil.userJSON.userID).child("following_keys").orderByValue().equalTo(key);
+                    ref.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                            dataSnapshot.getRef().setValue(null);
+                        }
+
+                        @Override
+                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                    database.child("users").child(DataUtil.userJSON.userID).child("following_count").runTransaction(new Transaction.Handler() {
+                        @NonNull @SuppressWarnings("ConstantConditions")
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                            int value = mutableData.getValue(Integer.class);
+                            value -= 1;
+                            mutableData.setValue(value);
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                        }
+                    });
+                    database.child("users").child(user.userID).child("follower_count").runTransaction(new Transaction.Handler() {
+                        @NonNull @SuppressWarnings("ConstantConditions")
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                            int value = mutableData.getValue(Integer.class);
+                            value -= 1;
+                            mutableData.setValue(value);
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                        }
+                    });
                     btn.setText(R.string.follow);
                 } else {
                     String id = database.push().getKey();
@@ -71,6 +135,36 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     assert id != null;
                     database.child("users").child(DataUtil.userJSON.userID).child("followings").child(id).setValue(user.userID);
                     database.child("users").child(DataUtil.userJSON.userID).child("following_keys").push().setValue(id);
+                    database.child("users").child(DataUtil.userJSON.userID).child("following_count").runTransaction(new Transaction.Handler() {
+                        @NonNull @SuppressWarnings("ConstantConditions")
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                            int value = mutableData.getValue(Integer.class);
+                            value += 1;
+                            mutableData.setValue(value);
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                        }
+                    });
+                    database.child("users").child(user.userID).child("follower_count").runTransaction(new Transaction.Handler() {
+                        @NonNull @SuppressWarnings("ConstantConditions")
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                            int value = mutableData.getValue(Integer.class);
+                            value += 1;
+                            mutableData.setValue(value);
+                            return Transaction.success(mutableData);
+                        }
+
+                        @Override
+                        public void onComplete(@Nullable DatabaseError databaseError, boolean b, @Nullable DataSnapshot dataSnapshot) {
+
+                        }
+                    });
                     btn.setText(R.string.followed);
                 }
             }

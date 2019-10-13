@@ -10,6 +10,7 @@
     <string name="log_in_with_facebook">Log in with facebook</string>
     <string name="log_in_with_google">Log in with google</string>
     <string name="email_error">Fill email field with correct format!</string>
+    <string name="password_error">Password minimum 7 characters!</string>
     <string name="login_not_found">Account not found</string>
     <string name="user_pref">user_pref</string>
     <string name="user_pass_pref">user_pass_pref</string>
