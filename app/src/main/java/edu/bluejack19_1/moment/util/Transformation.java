@@ -1,6 +1,5 @@
 package edu.bluejack19_1.moment.util;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 

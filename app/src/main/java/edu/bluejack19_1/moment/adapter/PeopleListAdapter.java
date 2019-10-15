@@ -69,11 +69,12 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     DataUtil.userJSON.followingIDKeys.remove(key);
                     DataUtil.userJSON.followingIDs.remove(user.userID);
                     database.child("users").child(DataUtil.userJSON.userID).child("followings").child(key).removeValue();
-                    Query ref = database.child("users").child(DataUtil.userJSON.userID).child("following_keys").orderByValue().equalTo(key);
+                    final Query ref = database.child("users").child(DataUtil.userJSON.userID).child("following_keys").orderByValue().equalTo(key);
                     ref.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                             dataSnapshot.getRef().setValue(null);
+                            ref.removeEventListener(this);
                         }
 
                         @Override

@@ -347,8 +347,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void gotoHome(String username) {
         Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+        DataUtil.userJSON.username = username;
         homeIntent.putExtra(HomeActivity.EXTRA_DATA, username);
-        Log.d("UNIQUE", username + "RR");
         startActivity(homeIntent);
         finish();
     }

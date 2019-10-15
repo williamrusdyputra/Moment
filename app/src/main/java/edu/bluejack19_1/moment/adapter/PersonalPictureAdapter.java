@@ -15,20 +15,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.bluejack19_1.moment.R;
-import edu.bluejack19_1.moment.model.Picture;
 import edu.bluejack19_1.moment.util.Transformation;
 
 public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPictureAdapter.PersonalPictureHolder> {
 
     private Context context;
-    private ArrayList<Picture> pictures;
+    private ArrayList<String> pictures = new ArrayList<>();
 
-    public PersonalPictureAdapter(Context context, ArrayList<Picture> pictures) {
+    public PersonalPictureAdapter(Context context) {
         this.context = context;
-        this.pictures =pictures;
     }
 
-    public void setData(List<Picture> pictureList) {
+    public void setData(List<String> pictureList) {
         this.pictures.clear();
         this.pictures.addAll(pictureList);
         notifyDataSetChanged();
@@ -43,10 +41,9 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
 
     @Override
     public void onBindViewHolder(@NonNull PersonalPictureHolder holder, int position) {
-        Picture picture = pictures.get(position);
 
         Glide.with(context)
-                .load(picture.getUrl())
+                .load(pictures.get(position))
                 .override(450, 450) //1
                 .centerCrop()
                 .transform(new Transformation(90f))

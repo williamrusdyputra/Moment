@@ -30,11 +30,13 @@ public class UserJSON {
     public List<String> followingIDKeys;
     @PropertyName("follower_keys")
     public List<String> followerIDKeys;
+    @PropertyName("liked_pictures")
+    public List<String> likedPictures;
 
     public UserJSON(String userID, String username, int postCount, int followerCount, int followingCount,
                     String description, String profilePictureUrl, List<String> pictureUrls,
                     List<String> followerIDs, List<String> followingIDs, List<String> followingIDKeys,
-                    List<String> followerIDKeys) {
+                    List<String> followerIDKeys, List<String> likedPictures) {
         this.userID = userID;
         this.username = username;
         this.postCount = postCount;
@@ -47,6 +49,7 @@ public class UserJSON {
         this.followingIDs = followingIDs;
         this.followerIDKeys = followerIDKeys;
         this.followingIDKeys = followingIDKeys;
+        this.likedPictures = likedPictures;
     }
 
     public UserJSON() {
@@ -54,5 +57,6 @@ public class UserJSON {
         followerIDs = new ArrayList<>();
         followingIDKeys = new ArrayList<>();
         followerIDKeys = new ArrayList<>();
+        likedPictures = new ArrayList<>();
     }
 }

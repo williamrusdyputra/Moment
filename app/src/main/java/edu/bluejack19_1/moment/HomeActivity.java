@@ -48,12 +48,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         String name = getIntent().getStringExtra(EXTRA_DATA);
-        Log.d("UNIQUE", name + "SS");
 
         setupData(name);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(true);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(DataUtil.userJSON.username);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(name);
 
         setupFragments();
 
@@ -72,6 +71,9 @@ public class HomeActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     String name = ds.child("username").getValue(String.class);
+
+                    if(!username.equals(name)) continue;
+
                     String description = ds.child("description").getValue(String.class);
                     String url = ds.child("profile_picture_url").getValue(String.class);
                     int postCount = ds.child("post_count").getValue(Integer.class);
@@ -114,6 +116,13 @@ public class HomeActivity extends AppCompatActivity {
                         followingIDKeys.add(item.getValue(String.class));
                     }
 
+                    DataSnapshot likedPictures = ds.child("liked_pictures");
+                    items = likedPictures.getChildren();
+                    ArrayList<String> lp = new ArrayList<>();
+                    for(DataSnapshot item : items) {
+                        lp.add(item.getValue(String.class));
+                    }
+
                     DataUtil.userJSON.userID = userID;
                     DataUtil.userJSON.username = name;
                     DataUtil.userJSON.postCount = postCount;
@@ -126,9 +135,14 @@ public class HomeActivity extends AppCompatActivity {
                     DataUtil.userJSON.followingIDs = followingIDs;
                     DataUtil.userJSON.followerIDKeys = followerIDKeys;
                     DataUtil.userJSON.followingIDKeys = followingIDKeys;
+                    DataUtil.userJSON.likedPictures = lp;
 
                     if(username.equals(name)) {
                         database.removeEventListener(this);
+                        LikedFragment fragment = (LikedFragment) getSupportFragmentManager().getFragments().get(2);
+                        fragment.updateData();
+                        ProfileFragment fragment2 = (ProfileFragment) getSupportFragmentManager().getFragments().get(3);
+                        fragment2.updateData();
                         break;
                     }
                 }

@@ -22,18 +22,15 @@ import android.widget.TextView;
 import edu.bluejack19_1.moment.EditProfileActivity;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.adapter.PersonalPictureAdapter;
-import edu.bluejack19_1.moment.model.Picture;
-import edu.bluejack19_1.moment.util.DataUtil;
 import edu.bluejack19_1.moment.viewmodel.PersonalPictureViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
     private PersonalPictureAdapter adapter;
-    private RecyclerView myPictures;
+    private PersonalPictureViewModel viewmodel;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -49,20 +46,12 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ArrayList<Picture> pictures = new ArrayList<>();
-
-        if(DataUtil.userJSON.pictureUrls != null) {
-            for(String url : DataUtil.userJSON.pictureUrls) {
-                pictures.add(new Picture(url));
-            }
-        }
-
-        myPictures = view.findViewById(R.id.personal_recycler_view);
-        adapter = new PersonalPictureAdapter(getContext(), pictures);
+        RecyclerView myPictures = view.findViewById(R.id.personal_recycler_view);
+        adapter = new PersonalPictureAdapter(getContext());
         adapter.notifyDataSetChanged();
         myPictures.setAdapter(adapter);
 
-        PersonalPictureViewModel viewmodel = ViewModelProviders.of(this).get(PersonalPictureViewModel.class);
+        viewmodel = ViewModelProviders.of(this).get(PersonalPictureViewModel.class);
         viewmodel.getPictures().observe(this, getPicture);
 
         myPictures.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -106,9 +95,9 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private Observer<List<Picture>> getPicture = new Observer<List<Picture>>() {
+    private Observer<List<String>> getPicture = new Observer<List<String>>() {
         @Override
-        public void onChanged(List<Picture> pictureList) {
+        public void onChanged(List<String> pictureList) {
             if(pictureList != null) {
                 adapter.setData(pictureList);
             }
@@ -119,6 +108,10 @@ public class ProfileFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         setRetainInstance(true);
+    }
+
+    public void updateData() {
+        viewmodel.getPictures().observe(this, getPicture);
     }
 
     public void setup(String description, int postCount, int followingCount, int followerCount) {
@@ -135,24 +128,5 @@ public class ProfileFragment extends Fragment {
         pc.setText(post);
         fc.setText(following);
         fc2.setText(follower);
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-        ArrayList<Picture> pictures = new ArrayList<>();
-
-        if(DataUtil.userJSON.pictureUrls != null) {
-            for (String url : DataUtil.userJSON.pictureUrls) {
-                pictures.add(new Picture(url));
-            }
-        }
-
-        if(!hidden) {
-            adapter = new PersonalPictureAdapter(getActivity(), pictures);
-            adapter.notifyDataSetChanged();
-            myPictures.setAdapter(adapter);
-        }
     }
 }

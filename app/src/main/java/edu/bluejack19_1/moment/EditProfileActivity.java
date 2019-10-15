@@ -72,4 +72,11 @@ public class EditProfileActivity extends AppCompatActivity {
             submitButton.setAlpha((float)0.5);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        finish();
+    }
 }

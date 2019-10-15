@@ -53,15 +53,15 @@ public class ExploreFragment extends Fragment {
         progressBar = view.findViewById(R.id.people_progress_bar);
         progressBar.show();
 
-        setupList();
-        setupRecyclerView(view);
+        setupList(view);
+
         setupSearchView(view);
     }
 
-    private void setupList() {
+    private void setupList(final View view) {
         people = new ArrayList<>();
 
-        database.child("users").addValueEventListener(new ValueEventListener() {
+        database.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @SuppressWarnings("ConstantConditions")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -79,6 +79,7 @@ public class ExploreFragment extends Fragment {
                         people.add(user);
                 }
                 progressBar.hide();
+                setupRecyclerView(view);
             }
 
             @Override
