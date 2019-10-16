@@ -36,4 +36,7 @@
     <string name="followed">followed</string>
     <string name="logout">logout</string>
     <string name="image">image</string>
+    <string name="todo">TODO</string>
+    <string name="pictures">Pictures</string>
+    <string name="people">People</string>
 </resources>
