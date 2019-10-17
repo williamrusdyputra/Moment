@@ -26,8 +26,8 @@ public class PersonalPictureViewModel extends ViewModel {
     private void updateUrls() {
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-        if(DataUtil.userJSON.userID != null) {
-            DatabaseReference ref = database.child("users").child(DataUtil.userJSON.userID).child("picture_urls");
+        if(DataUtil.user.userID != null) {
+            DatabaseReference ref = database.child("users").child(DataUtil.user.userID).child("picture_urls");
 
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override

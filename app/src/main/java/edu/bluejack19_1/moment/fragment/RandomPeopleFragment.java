@@ -26,12 +26,12 @@ import java.util.ArrayList;
 
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.adapter.PeopleListAdapter;
-import edu.bluejack19_1.moment.model.UserJSON;
+import edu.bluejack19_1.moment.model.User;
 import edu.bluejack19_1.moment.util.DataUtil;
 
 public class RandomPeopleFragment extends Fragment {
 
-    private ArrayList<UserJSON> people;
+    private ArrayList<User> people;
     private PeopleListAdapter adapter;
     private ContentLoadingProgressBar progressBar;
     private final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
@@ -67,7 +67,7 @@ public class RandomPeopleFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    UserJSON user = new UserJSON();
+                    User user = new User();
                     user.username = ds.child("username").getValue(String.class);
                     user.description = ds.child("description").getValue(String.class);
                     user.profilePictureUrl = ds.child("profile_picture_url").getValue(String.class);
@@ -76,7 +76,7 @@ public class RandomPeopleFragment extends Fragment {
                     user.followingCount = ds.child("following_count").getValue(Integer.class);
                     user.userID = ds.child("user_id").getValue(String.class);
 
-                    if(!user.userID.equals(DataUtil.userJSON.userID))
+                    if(!user.userID.equals(DataUtil.user.userID))
                         people.add(user);
                 }
                 progressBar.hide();

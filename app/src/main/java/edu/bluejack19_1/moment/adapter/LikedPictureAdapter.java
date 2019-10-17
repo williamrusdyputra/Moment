@@ -65,7 +65,7 @@ public class LikedPictureAdapter extends RecyclerView.Adapter<LikedPictureAdapte
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final Query query = ref.child("users").child(DataUtil.userJSON.userID).child("liked_pictures").orderByValue().equalTo(url);
+                final Query query = ref.child("users").child(DataUtil.user.userID).child("liked_pictures").orderByValue().equalTo(url);
                 query.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {

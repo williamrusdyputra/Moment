@@ -25,8 +25,8 @@ public class LikedViewModel extends ViewModel {
         final ArrayList<String> urls = new ArrayList<>();
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
-        if(DataUtil.userJSON.userID != null) {
-            ref.child("users").child(DataUtil.userJSON.userID).child("liked_pictures").addListenerForSingleValueEvent(new ValueEventListener() {
+        if(DataUtil.user.userID != null) {
+            ref.child("users").child(DataUtil.user.userID).child("liked_pictures").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {

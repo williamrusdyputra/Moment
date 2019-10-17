@@ -123,19 +123,19 @@ public class HomeActivity extends AppCompatActivity {
                         lp.add(item.getValue(String.class));
                     }
 
-                    DataUtil.userJSON.userID = userID;
-                    DataUtil.userJSON.username = name;
-                    DataUtil.userJSON.postCount = postCount;
-                    DataUtil.userJSON.followerCount = followerCount;
-                    DataUtil.userJSON.followingCount = followingCount;
-                    DataUtil.userJSON.profilePictureUrl = url;
-                    DataUtil.userJSON.description = description;
-                    DataUtil.userJSON.pictureUrls = postUrls;
-                    DataUtil.userJSON.followerIDs = followerIDs;
-                    DataUtil.userJSON.followingIDs = followingIDs;
-                    DataUtil.userJSON.followerIDKeys = followerIDKeys;
-                    DataUtil.userJSON.followingIDKeys = followingIDKeys;
-                    DataUtil.userJSON.likedPictures = lp;
+                    DataUtil.user.userID = userID;
+                    DataUtil.user.username = name;
+                    DataUtil.user.postCount = postCount;
+                    DataUtil.user.followerCount = followerCount;
+                    DataUtil.user.followingCount = followingCount;
+                    DataUtil.user.profilePictureUrl = url;
+                    DataUtil.user.description = description;
+                    DataUtil.user.pictureUrls = postUrls;
+                    DataUtil.user.followerIDs = followerIDs;
+                    DataUtil.user.followingIDs = followingIDs;
+                    DataUtil.user.followerIDKeys = followerIDKeys;
+                    DataUtil.user.followingIDKeys = followingIDKeys;
+                    DataUtil.user.likedPictures = lp;
 
                     if(username.equals(name)) {
                         database.removeEventListener(this);
@@ -182,8 +182,8 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 case R.id.action_profile:
                     ProfileFragment pf = (ProfileFragment) getSupportFragmentManager().getFragments().get(3);
-                    pf.setup(DataUtil.userJSON.description, DataUtil.userJSON.postCount, DataUtil.userJSON.followingCount,
-                            DataUtil.userJSON.followerCount);
+                    pf.setup(DataUtil.user.description, DataUtil.user.postCount, DataUtil.user.followingCount,
+                            DataUtil.user.followerCount);
                     fragmentManager.beginTransaction().hide(active).show(profileFragment).commit();
                     active = profileFragment;
                     return true;

@@ -26,17 +26,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import edu.bluejack19_1.moment.R;
-import edu.bluejack19_1.moment.model.UserJSON;
+import edu.bluejack19_1.moment.model.User;
 import edu.bluejack19_1.moment.util.DataUtil;
 
 public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.PeopleHolder> implements Filterable {
 
     private Context context;
-    private ArrayList<UserJSON> people;
-    private ArrayList<UserJSON> allPeople;
+    private ArrayList<User> people;
+    private ArrayList<User> allPeople;
     private final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
-    public PeopleListAdapter(Context context, ArrayList<UserJSON> people) {
+    public PeopleListAdapter(Context context, ArrayList<User> people) {
         this.context = context;
         this.people = people;
         allPeople = new ArrayList<>(people);
@@ -51,11 +51,11 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
 
     @Override
     public void onBindViewHolder(@NonNull final PeopleHolder holder, int position) {
-        final UserJSON user = people.get(position);
+        final User user = people.get(position);
 
         holder.username.setText(user.username);
 
-        if(DataUtil.userJSON.followingIDs.contains(user.userID)) {
+        if(DataUtil.user.followingIDs.contains(user.userID)) {
             holder.followButton.setText(R.string.followed);
         }
 
@@ -64,12 +64,12 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
             public void onClick(View view) {
                 Button btn = (Button) view;
                 if(btn.getText().toString().equalsIgnoreCase("Followed")) {
-                    int index = DataUtil.userJSON.followingIDs.indexOf(user.userID);
-                    String key = DataUtil.userJSON.followingIDKeys.get(index);
-                    DataUtil.userJSON.followingIDKeys.remove(key);
-                    DataUtil.userJSON.followingIDs.remove(user.userID);
-                    database.child("users").child(DataUtil.userJSON.userID).child("followings").child(key).removeValue();
-                    final Query ref = database.child("users").child(DataUtil.userJSON.userID).child("following_keys").orderByValue().equalTo(key);
+                    int index = DataUtil.user.followingIDs.indexOf(user.userID);
+                    String key = DataUtil.user.followingIDKeys.get(index);
+                    DataUtil.user.followingIDKeys.remove(key);
+                    DataUtil.user.followingIDs.remove(user.userID);
+                    database.child("users").child(DataUtil.user.userID).child("followings").child(key).removeValue();
+                    final Query ref = database.child("users").child(DataUtil.user.userID).child("following_keys").orderByValue().equalTo(key);
                     ref.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -98,7 +98,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                         }
                     });
 
-                    database.child("users").child(DataUtil.userJSON.userID).child("following_count").runTransaction(new Transaction.Handler() {
+                    database.child("users").child(DataUtil.user.userID).child("following_count").runTransaction(new Transaction.Handler() {
                         @NonNull @SuppressWarnings("ConstantConditions")
                         @Override
                         public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -131,12 +131,12 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     btn.setText(R.string.follow);
                 } else {
                     String id = database.push().getKey();
-                    DataUtil.userJSON.followingIDs.add(user.userID);
-                    DataUtil.userJSON.followingIDKeys.add(id);
+                    DataUtil.user.followingIDs.add(user.userID);
+                    DataUtil.user.followingIDKeys.add(id);
                     assert id != null;
-                    database.child("users").child(DataUtil.userJSON.userID).child("followings").child(id).setValue(user.userID);
-                    database.child("users").child(DataUtil.userJSON.userID).child("following_keys").push().setValue(id);
-                    database.child("users").child(DataUtil.userJSON.userID).child("following_count").runTransaction(new Transaction.Handler() {
+                    database.child("users").child(DataUtil.user.userID).child("followings").child(id).setValue(user.userID);
+                    database.child("users").child(DataUtil.user.userID).child("following_keys").push().setValue(id);
+                    database.child("users").child(DataUtil.user.userID).child("following_count").runTransaction(new Transaction.Handler() {
                         @NonNull @SuppressWarnings("ConstantConditions")
                         @Override
                         public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
@@ -185,14 +185,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     private Filter filteredList = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence charSequence) {
-            ArrayList<UserJSON> filteredPeople = new ArrayList<>();
+            ArrayList<User> filteredPeople = new ArrayList<>();
 
             if(charSequence == null || charSequence.length() == 0) {
                 filteredPeople.addAll(allPeople);
             } else {
                 String pattern = charSequence.toString().toLowerCase().trim();
 
-                for(UserJSON user : allPeople) {
+                for(User user : allPeople) {
                     if(user.username.toLowerCase().contains(pattern)) {
                         filteredPeople.add(user);
                     }
@@ -209,7 +209,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
         @Override
         protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
             people.clear();
-            people.addAll((Collection<? extends UserJSON>) filterResults.values);
+            people.addAll((Collection<? extends User>) filterResults.values);
             notifyDataSetChanged();
         }
     };

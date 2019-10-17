@@ -212,7 +212,7 @@ public class AddFragment extends Fragment {
 
                     //Create Path to save Image
                     File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES); //Creates app specific folder
-                    File imageFile = new File(path, DataUtil.userJSON.username + Math.random() * 1000 +".jpeg"); // Imagename.png
+                    File imageFile = new File(path, DataUtil.user.username + Math.random() * 1000 +".jpeg"); // Imagename.png
                     FileOutputStream out = new FileOutputStream(imageFile);
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try{
@@ -244,12 +244,12 @@ public class AddFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             String imageURL = uri.toString();
-                                            DataUtil.userJSON.pictureUrls.add(imageURL);
+                                            DataUtil.user.pictureUrls.add(imageURL);
                                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                                             DatabaseReference myRef = database.getReference();
 
-                                            myRef.child("users").child(DataUtil.userJSON.userID).child("picture_urls").push().setValue(imageURL);
-                                            myRef.child("users").child(DataUtil.userJSON.userID).child("post_count").setValue(DataUtil.userJSON.postCount+1);
+                                            myRef.child("users").child(DataUtil.user.userID).child("picture_urls").push().setValue(imageURL);
+                                            myRef.child("users").child(DataUtil.user.userID).child("post_count").setValue(DataUtil.user.postCount+1);
                                         }
                                     });
                                 }

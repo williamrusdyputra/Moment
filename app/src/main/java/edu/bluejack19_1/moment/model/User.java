@@ -5,7 +5,7 @@ import com.google.firebase.database.PropertyName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserJSON {
+public class User {
     @PropertyName("user_id")
     public String userID;
     @PropertyName("username")
@@ -33,10 +33,10 @@ public class UserJSON {
     @PropertyName("liked_pictures")
     public List<String> likedPictures;
 
-    public UserJSON(String userID, String username, int postCount, int followerCount, int followingCount,
-                    String description, String profilePictureUrl, List<String> pictureUrls,
-                    List<String> followerIDs, List<String> followingIDs, List<String> followingIDKeys,
-                    List<String> followerIDKeys, List<String> likedPictures) {
+    public User(String userID, String username, int postCount, int followerCount, int followingCount,
+                String description, String profilePictureUrl, List<String> pictureUrls,
+                List<String> followerIDs, List<String> followingIDs, List<String> followingIDKeys,
+                List<String> followerIDKeys, List<String> likedPictures) {
         this.userID = userID;
         this.username = username;
         this.postCount = postCount;
@@ -52,7 +52,7 @@ public class UserJSON {
         this.likedPictures = likedPictures;
     }
 
-    public UserJSON() {
+    public User() {
         followingIDs = new ArrayList<>();
         followerIDs = new ArrayList<>();
         followingIDKeys = new ArrayList<>();

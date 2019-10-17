@@ -55,8 +55,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference ref = database.getReference();
 
-                ref.child("users").child(DataUtil.userJSON.userID).child("description").setValue(Objects.requireNonNull(textInputDescription.getEditText()).getText().toString());
-                ref.child("users").child(DataUtil.userJSON.userID).child("username").setValue(textInputUsername.getEditText().getText().toString());
+                ref.child("users").child(DataUtil.user.userID).child("description").setValue(Objects.requireNonNull(textInputDescription.getEditText()).getText().toString());
+                ref.child("users").child(DataUtil.user.userID).child("username").setValue(textInputUsername.getEditText().getText().toString());
 
                 finish();
             }

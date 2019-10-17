@@ -149,9 +149,9 @@ public class LoginActivity extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    DataUtil.userJSON.username = sharedPref.getString(getString(R.string.user_pref), "error").split("@")[0];
+                    DataUtil.user.username = sharedPref.getString(getString(R.string.user_pref), "error").split("@")[0];
                     Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                    homeIntent.putExtra(HomeActivity.EXTRA_DATA, DataUtil.userJSON.username);
+                    homeIntent.putExtra(HomeActivity.EXTRA_DATA, DataUtil.user.username);
                     startActivity(homeIntent);
                     finish();
                 }
@@ -301,7 +301,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
-                DataUtil.userJSON.username = Objects.requireNonNull(account.getEmail()).split("@")[0];
+                DataUtil.user.username = Objects.requireNonNull(account.getEmail()).split("@")[0];
             }
         } catch (ApiException e) {
             Log.w("ERROR", "signInResult:failed code=" + e.getStatusCode());
@@ -347,7 +347,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void gotoHome(String username) {
         Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-        DataUtil.userJSON.username = username;
+        DataUtil.user.username = username;
         homeIntent.putExtra(HomeActivity.EXTRA_DATA, username);
         startActivity(homeIntent);
         finish();

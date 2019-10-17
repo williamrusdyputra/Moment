@@ -73,15 +73,15 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
         holder.likeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!DataUtil.userJSON.likedPictures.contains(url)) {
-                    ref.child("users").child(DataUtil.userJSON.userID).child("liked_pictures").push().setValue(url);
+                if(!DataUtil.user.likedPictures.contains(url)) {
+                    ref.child("users").child(DataUtil.user.userID).child("liked_pictures").push().setValue(url);
                     holder.likeButton.setBackgroundTintList(AppCompatResources.getColorStateList(context, R.color.colorWhite));
                     holder.likeButton.setImageTintList(AppCompatResources.getColorStateList(context, R.color.colorAccent));
-                    DataUtil.userJSON.likedPictures.add(url);
+                    DataUtil.user.likedPictures.add(url);
                     LikedFragment fragment = (LikedFragment) ((HomeActivity)context).getSupportFragmentManager().getFragments().get(2);
                     fragment.updateData();
                 } else {
-                    final Query query = ref.child("users").child(DataUtil.userJSON.userID).child("liked_pictures").orderByValue().equalTo(url);
+                    final Query query = ref.child("users").child(DataUtil.user.userID).child("liked_pictures").orderByValue().equalTo(url);
                     query.addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -111,7 +111,7 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
                     });
                     holder.likeButton.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#9497a1")));
                     holder.likeButton.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
-                    DataUtil.userJSON.likedPictures.remove(url);
+                    DataUtil.user.likedPictures.remove(url);
                 }
 
             }
