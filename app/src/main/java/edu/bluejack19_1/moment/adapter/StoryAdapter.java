@@ -1,7 +1,9 @@
 package edu.bluejack19_1.moment.adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.util.Log;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import edu.bluejack19_1.moment.AddStoryActivity;
 import edu.bluejack19_1.moment.R;
+import edu.bluejack19_1.moment.StoryActivity;
 import edu.bluejack19_1.moment.model.Story;
 import edu.bluejack19_1.moment.util.DataUtil;
 
@@ -47,7 +51,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
 
     @Override
     public void onBindViewHolder(@NonNull final StoryViewHolder holder, int position) {
-        Story st = story.get(position);
+        final Story st = story.get(position);
 
         userInfo(holder, st.getUserID(), position);
 
@@ -64,6 +68,10 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             public void onClick(View view) {
                 if(holder.getAdapterPosition() == 0) {
                     myStory(holder.addStoryText, holder.storyPlus, true);
+                } else {
+                    Intent intent = new Intent(context, StoryActivity.class);
+                    intent.putExtra("userid", st.getUserID());
+                    context.startActivity(intent);
                 }
             }
         });
@@ -135,6 +143,31 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                     } else {
                         textView.setText(context.getResources().getString(R.string.add_story));
                         imageView.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    if(count > 0) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+                        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "View story", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(context, StoryActivity.class);
+                                intent.putExtra("userid", DataUtil.user.userID);
+                                context.startActivity(intent);
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Add story", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(context, AddStoryActivity.class);
+                                context.startActivity(intent);
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        alertDialog.show();
+                    } else {
+                        Intent intent = new Intent(context, AddStoryActivity.class);
+                        context.startActivity(intent);
                     }
                 }
             }

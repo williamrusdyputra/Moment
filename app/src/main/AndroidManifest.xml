@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera2.full" />
@@ -18,8 +19,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".EditProfileActivity"
-            android:theme="@style/HomeTheme"/>
+        <activity android:name=".StoryActivity"></activity>
+        <activity android:name=".AddStoryActivity" />
+        <activity
+            android:name=".EditProfileActivity"
+            android:theme="@style/HomeTheme" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

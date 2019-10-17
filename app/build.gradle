@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.github.shts:StoriesProgressView:3.0.0'
     implementation 'de.hdodenhof:circleimageview:3.0.1'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
