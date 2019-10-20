@@ -1,11 +1,14 @@
 package edu.bluejack19_1.moment.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.PropertyName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Parcelable {
     @PropertyName("user_id")
     public String userID;
     @PropertyName("username")
@@ -58,5 +61,55 @@ public class User {
         followingIDKeys = new ArrayList<>();
         followerIDKeys = new ArrayList<>();
         likedPictures = new ArrayList<>();
+    }
+
+    private User(Parcel in) {
+        userID = in.readString();
+        username = in.readString();
+        postCount = in.readInt();
+        followerCount = in.readInt();
+        followingCount = in.readInt();
+        description = in.readString();
+        profilePictureUrl = in.readString();
+        pictureUrls = in.createStringArrayList();
+        followingIDs = in.createStringArrayList();
+        followerIDs = in.createStringArrayList();
+        followingIDKeys = in.createStringArrayList();
+        followerIDKeys = in.createStringArrayList();
+        likedPictures = in.createStringArrayList();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(userID);
+        parcel.writeString(username);
+        parcel.writeInt(postCount);
+        parcel.writeInt(followerCount);
+        parcel.writeInt(followingCount);
+        parcel.writeString(description);
+        parcel.writeString(profilePictureUrl);
+        parcel.writeStringList(pictureUrls);
+        parcel.writeStringList(followingIDs);
+        parcel.writeStringList(followerIDs);
+        parcel.writeStringList(followingIDKeys);
+        parcel.writeStringList(followerIDKeys);
+        parcel.writeStringList(likedPictures);
     }
 }

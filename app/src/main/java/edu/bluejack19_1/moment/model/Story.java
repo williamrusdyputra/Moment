@@ -2,59 +2,59 @@ package edu.bluejack19_1.moment.model;
 
 public class Story {
 
-    private String imageUrl;
-    private long timeStart;
-    private long timeEnd;
-    private String storyID;
-    private String userID;
+    private String imageurl;
+    private long timestart;
+    private long timeend;
+    private String storyid;
+    private String userid;
 
     public Story(String imageUrl, long timeStart, long timeEnd, String storyID, String userID) {
-        this.imageUrl = imageUrl;
-        this.timeStart = timeStart;
-        this.timeEnd = timeEnd;
-        this.storyID = storyID;
-        this.userID = userID;
+        this.imageurl = imageUrl;
+        this.timestart = timeStart;
+        this.timeend = timeEnd;
+        this.storyid = storyID;
+        this.userid = userID;
     }
 
     public Story() {}
 
     public String getUserID() {
-        return userID;
+        return userid;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setUserID(String userid) {
+        this.userid = userid;
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        return imageurl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrl(String imageurl) {
+        this.imageurl = imageurl;
     }
 
     public long getTimeStart() {
-        return timeStart;
+        return timestart;
     }
 
-    public void setTimeStart(long timeStart) {
-        this.timeStart = timeStart;
+    public void setTimeStart(long timestart) {
+        this.timestart = timestart;
     }
 
     public long getTimeEnd() {
-        return timeEnd;
+        return timeend;
     }
 
-    public void setTimeEnd(long timeEnd) {
-        this.timeEnd = timeEnd;
+    public void setTimeEnd(long timeend) {
+        this.timeend = timeend;
     }
 
     public String getStoryID() {
-        return storyID;
+        return storyid;
     }
 
-    public void setStoryID(String storyID) {
-        this.storyID = storyID;
+    public void setStoryID(String storyid) {
+        this.storyid = storyid;
     }
 }

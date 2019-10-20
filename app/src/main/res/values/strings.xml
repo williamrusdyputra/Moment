@@ -41,4 +41,8 @@
     <string name="people">People</string>
     <string name="my_story">My Story</string>
     <string name="add_story">Add Story</string>
+    <string name="type_something">Type something..</string>
+    <string name="nothing">nothing</string>
+    <string name="empty_message">You can\'t send empty message</string>
+    <string name="no_message">No Message</string>
 </resources>

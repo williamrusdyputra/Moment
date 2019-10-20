@@ -1,6 +1,8 @@
 package edu.bluejack19_1.moment.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,7 @@ import com.google.firebase.database.Transaction;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import edu.bluejack19_1.moment.ChatActivity;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.model.User;
 import edu.bluejack19_1.moment.util.DataUtil;
@@ -50,7 +53,7 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final PeopleHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final PeopleHolder holder, final int position) {
         final User user = people.get(position);
 
         holder.username.setText(user.username);
@@ -168,6 +171,17 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     });
                     btn.setText(R.string.followed);
                 }
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatActivity.class);
+                Bundle data = new Bundle();
+                data.putParcelable("user", DataUtil.people.get(position));
+                intent.putExtra("bundle", data);
+                context.startActivity(intent);
             }
         });
     }

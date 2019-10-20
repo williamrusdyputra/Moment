@@ -11,30 +11,32 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.adapter.PeopleListAdapter;
 import edu.bluejack19_1.moment.model.User;
+import edu.bluejack19_1.moment.notification.Token;
 import edu.bluejack19_1.moment.util.DataUtil;
 
 public class RandomPeopleFragment extends Fragment {
 
-    private ArrayList<User> people;
     private PeopleListAdapter adapter;
     private ContentLoadingProgressBar progressBar;
-    private final DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
     public RandomPeopleFragment() {
         // Required empty public constructor
@@ -51,46 +53,36 @@ public class RandomPeopleFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        ArrayList<User> users = DataUtil.people;
+
         progressBar = view.findViewById(R.id.people_progress_bar);
         progressBar.show();
 
-        setupList(view);
-
+        setupRecyclerView(view, users);
         setupSearchView(view);
+
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("UNIQUE", "getInstanceId failed", task.getException());
+                        }
+                        String token = Objects.requireNonNull(task.getResult()).getToken();
+
+                        updateToken(token);
+                    }
+                });
     }
 
-    private void setupList(final View view) {
-        people = new ArrayList<>();
-
-        database.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @SuppressWarnings("ConstantConditions")
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for(DataSnapshot ds : dataSnapshot.getChildren()) {
-                    User user = new User();
-                    user.username = ds.child("username").getValue(String.class);
-                    user.description = ds.child("description").getValue(String.class);
-                    user.profilePictureUrl = ds.child("profile_picture_url").getValue(String.class);
-                    user.postCount = ds.child("post_count").getValue(Integer.class);
-                    user.followerCount = ds.child("follower_count").getValue(Integer.class);
-                    user.followingCount = ds.child("following_count").getValue(Integer.class);
-                    user.userID = ds.child("user_id").getValue(String.class);
-
-                    if(!user.userID.equals(DataUtil.user.userID))
-                        people.add(user);
-                }
-                progressBar.hide();
-                setupRecyclerView(view);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+    private void updateToken(String token) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("tokens");
+        Token token1 = new Token(token);
+        ref.child(DataUtil.user.userID).setValue(token1);
     }
 
-    private void setupRecyclerView(View view) {
+    private void setupRecyclerView(View view, ArrayList<User> people) {
+        progressBar.hide();
         RecyclerView rvList = view.findViewById(R.id.people_list);
         rvList.setHasFixedSize(true);
         rvList.setLayoutManager(new LinearLayoutManager(getContext()));

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,14 +64,14 @@ public class HomeFragment extends Fragment {
         HomePictureViewModel viewModel = ViewModelProviders.of(this).get(HomePictureViewModel.class);
         viewModel.getUrls().observe(this, observer);
 
+        getStory();
+
         RecyclerView recyclerViewStory = view.findViewById(R.id.home_stories);
         recyclerViewStory.setHasFixedSize(true);
         recyclerViewStory.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         storyList = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyList);
         recyclerViewStory.setAdapter(storyAdapter);
-
-        getStory();
     }
 
     private Observer<Map<String, String>> observer = new Observer<Map<String, String>>() {
@@ -87,24 +88,26 @@ public class HomeFragment extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long currentTime = System.currentTimeMillis();
-                storyList.clear();
-                storyList.add(new Story("", 0, 0, "", DataUtil.user.userID));
-                for(String id : DataUtil.user.followingIDs) {
-                    int count = 0;
-                    Story story = null;
-                    for(DataSnapshot ds : dataSnapshot.child(id).getChildren()) {
-                        story = ds.getValue(Story.class);
-                        assert story != null;
-                        if(currentTime > story.getTimeStart() && currentTime < story.getTimeEnd()) {
-                            count++;
+                if(DataUtil.user.userID != null) {
+                    long currentTime = System.currentTimeMillis();
+                    storyList.add(new Story("", 0, 0, "", DataUtil.user.userID));
+                    for (String id : DataUtil.user.followingIDs) {
+                        int count = 0;
+                        Story story = null;
+                        for (DataSnapshot ds : dataSnapshot.child(id).getChildren()) {
+                            story = ds.getValue(Story.class);
+                            if (story != null && currentTime > story.getTimeStart() && currentTime < story.getTimeEnd()) {
+                                count++;
+                            }
+                        }
+                        if (count > 0) {
+                            storyList.add(story);
                         }
                     }
-                    if(count > 0) {
-                        storyList.add(story);
-                    }
+                    Log.d("UNIQUE", storyList.size() + " ");
+                    Log.d("UNIQUE", storyList.get(0).getUserID() + " ");
+                    storyAdapter.setData(storyList);
                 }
-                storyAdapter.notifyDataSetChanged();
             }
 
             @Override

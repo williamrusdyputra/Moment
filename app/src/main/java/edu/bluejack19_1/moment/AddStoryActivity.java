@@ -60,7 +60,7 @@ public class AddStoryActivity extends AppCompatActivity {
         pb.setVisibility(View.VISIBLE);
 
         if(mImageUri != null) {
-            final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + "." + getFileExtension(mImageUri));
+            final StorageReference imageReference = storageReference.child(System.currentTimeMillis() + ".jpeg");
 
             storageTask = imageReference.putFile(mImageUri);
             storageTask.continueWithTask(new Continuation() {

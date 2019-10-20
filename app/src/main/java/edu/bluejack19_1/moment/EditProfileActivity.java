@@ -18,9 +18,6 @@ import edu.bluejack19_1.moment.util.DataUtil;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    private TextInputLayout textInputUsername;
-    private Button submitButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,26 +25,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
-        textInputUsername = findViewById(R.id.text_input_username);
         final TextInputLayout textInputDescription = findViewById(R.id.text_input_description);
-        submitButton = findViewById(R.id.edit_button);
+        Button submitButton = findViewById(R.id.edit_button);
 
-        Objects.requireNonNull(textInputUsername.getEditText()).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                checkRequiredFields();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,27 +36,17 @@ public class EditProfileActivity extends AppCompatActivity {
                 DatabaseReference ref = database.getReference();
 
                 ref.child("users").child(DataUtil.user.userID).child("description").setValue(Objects.requireNonNull(textInputDescription.getEditText()).getText().toString());
-                ref.child("users").child(DataUtil.user.userID).child("username").setValue(textInputUsername.getEditText().getText().toString());
+
+                DataUtil.user.description = textInputDescription.getEditText().getText().toString();
 
                 finish();
             }
         });
     }
 
-    private void checkRequiredFields() {
-        if (!Objects.requireNonNull(textInputUsername.getEditText()).getText().toString().isEmpty()) {
-            submitButton.setEnabled(true);
-            submitButton.setAlpha(1);
-        } else {
-            submitButton.setEnabled(false);
-            submitButton.setAlpha((float)0.5);
-        }
-    }
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
         finish();
+        super.onBackPressed();
     }
 }

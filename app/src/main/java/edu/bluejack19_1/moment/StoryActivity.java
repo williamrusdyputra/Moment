@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,9 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import edu.bluejack19_1.moment.model.Story;
-import edu.bluejack19_1.moment.model.User;
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
 public class StoryActivity extends AppCompatActivity implements StoriesProgressView.StoriesListener {
@@ -156,9 +157,8 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                assert user != null;
-                storyUsername.setText(user.username);
+                String username = Objects.requireNonNull(dataSnapshot.child("username").getValue()).toString();
+                storyUsername.setText(username);
             }
 
             @Override

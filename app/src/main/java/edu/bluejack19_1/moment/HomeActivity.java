@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -12,19 +13,26 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import edu.bluejack19_1.moment.fragment.AddFragment;
 import edu.bluejack19_1.moment.fragment.ExploreFragment;
 import edu.bluejack19_1.moment.fragment.HomeFragment;
 import edu.bluejack19_1.moment.fragment.LikedFragment;
 import edu.bluejack19_1.moment.fragment.ProfileFragment;
+import edu.bluejack19_1.moment.notification.Token;
 import edu.bluejack19_1.moment.util.DataUtil;
 
 import java.util.ArrayList;
@@ -41,12 +49,18 @@ public class HomeActivity extends AppCompatActivity {
     private final Fragment profileFragment = new ProfileFragment();
     private Fragment active = homeFragment;
     private FragmentManager fragmentManager = getSupportFragmentManager();
+    private FloatingActionButton chatFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        init();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void init() {
         String name = getIntent().getStringExtra(EXTRA_DATA);
 
         setupData(name);
@@ -56,8 +70,21 @@ public class HomeActivity extends AppCompatActivity {
 
         setupFragments();
 
+        DataUtil.getUsers();
+
         final BottomNavigationView navView = findViewById(R.id.nav_bar);
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        chatFab = findViewById(R.id.chat_fab);
+        chatFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, ChatListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        chatFab.setVisibility(View.GONE);
     }
 
     private void setupData(String name) {
@@ -163,24 +190,29 @@ public class HomeActivity extends AppCompatActivity {
         fragmentManager.beginTransaction().add(R.id.include, homeFragment, "home").commit();
     }
 
+    @SuppressLint("RestrictedApi")
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
             switch(menuItem.getItemId()) {
                 case R.id.action_add:
+                    chatFab.setVisibility(View.VISIBLE);
                     fragmentManager.beginTransaction().hide(active).show(addFragment).commit();
                     active = addFragment;
                     return true;
                 case R.id.action_explore:
+                    chatFab.setVisibility(View.VISIBLE);
                     fragmentManager.beginTransaction().hide(active).show(exploreFragment).commit();
                     active = exploreFragment;
                     return true;
                 case R.id.action_liked:
+                    chatFab.setVisibility(View.VISIBLE);
                     fragmentManager.beginTransaction().hide(active).show(likedFragment).commit();
                     active = likedFragment;
                     return true;
                 case R.id.action_profile:
+                    chatFab.setVisibility(View.VISIBLE);
                     ProfileFragment pf = (ProfileFragment) getSupportFragmentManager().getFragments().get(3);
                     pf.setup(DataUtil.user.description, DataUtil.user.postCount, DataUtil.user.followingCount,
                             DataUtil.user.followerCount);
@@ -188,6 +220,7 @@ public class HomeActivity extends AppCompatActivity {
                     active = profileFragment;
                     return true;
                 case R.id.action_home:
+                    chatFab.setVisibility(View.GONE);
                     fragmentManager.beginTransaction().hide(active).show(homeFragment).commit();
                     active = homeFragment;
                      return true;

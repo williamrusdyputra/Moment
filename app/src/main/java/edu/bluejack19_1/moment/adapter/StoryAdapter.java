@@ -38,15 +38,21 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         this.story = story;
     }
 
+    public void setData(ArrayList<Story> story) {
+        this.story = story;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public StoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if(viewType == 0) {
             View view = LayoutInflater.from(context).inflate(R.layout.add_story_item, parent, false);
             return new StoryViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(context).inflate(R.layout.story_item, parent, false);
+            return new StoryViewHolder(view);
         }
-        View view = LayoutInflater.from(context).inflate(R.layout.story_item, parent, false);
-        return new StoryViewHolder(view);
     }
 
     @Override
