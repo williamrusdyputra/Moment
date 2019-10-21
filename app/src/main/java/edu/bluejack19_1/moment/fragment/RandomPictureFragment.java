@@ -1,5 +1,6 @@
 package edu.bluejack19_1.moment.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,11 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ProgressBar;
+
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 
 import java.util.ArrayList;
 
@@ -27,6 +33,7 @@ public class RandomPictureFragment extends Fragment {
     private int pastVisibleItems;
     private int visibleItemCount;
     private int totalItemCount;
+    private ProgressBar progressBar;
 
     public RandomPictureFragment() {
         // Required empty public constructor
@@ -42,12 +49,32 @@ public class RandomPictureFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView rv = view.findViewById(R.id.staggered_rv);
+        progressBar = view.findViewById(R.id.progress_bar);
+        Sprite sprite = new ThreeBounce();
+        sprite.setColor(Color.BLACK);
+        progressBar.setIndeterminateDrawable(sprite);
+        progressBar.setVisibility(View.VISIBLE);
+
+        final RecyclerView rv = view.findViewById(R.id.staggered_rv);
         rv.setHasFixedSize(true);
         final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         rv.setLayoutManager(layoutManager);
 
         rv.setItemAnimator(null);
+
+        rv.setVisibility(View.GONE);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        rv.getViewTreeObserver()
+                .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        rv.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        rv.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
 
         for(int i = 0; i < 10; i++) {
             int width = 400;

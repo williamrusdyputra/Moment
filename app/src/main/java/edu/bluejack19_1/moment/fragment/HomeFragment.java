@@ -1,5 +1,6 @@
 package edu.bluejack19_1.moment.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,7 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,6 +41,7 @@ public class HomeFragment extends Fragment {
     private HomePictureAdapter adapter;
     private StoryAdapter storyAdapter;
     private ArrayList<Story> storyList;
+    private ProgressBar progressBar;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -51,6 +56,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        progressBar = view.findViewById(R.id.progress_bar);
+        Sprite sprite = new ThreeBounce();
+        sprite.setColor(Color.BLACK);
+        progressBar.setIndeterminateDrawable(sprite);
+        progressBar.setVisibility(View.VISIBLE);
 
         RecyclerView recyclerView = view.findViewById(R.id.home_pictures);
         recyclerView.setHasFixedSize(true);
@@ -89,6 +100,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(DataUtil.user.userID != null) {
+                    storyList.clear();
                     long currentTime = System.currentTimeMillis();
                     storyList.add(new Story("", 0, 0, "", DataUtil.user.userID));
                     for (String id : DataUtil.user.followingIDs) {
@@ -104,9 +116,8 @@ public class HomeFragment extends Fragment {
                             storyList.add(story);
                         }
                     }
-                    Log.d("UNIQUE", storyList.size() + " ");
-                    Log.d("UNIQUE", storyList.get(0).getUserID() + " ");
                     storyAdapter.setData(storyList);
+                    progressBar.setVisibility(View.GONE);
                 }
             }
 

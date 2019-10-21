@@ -2,6 +2,7 @@ package edu.bluejack19_1.moment.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -16,8 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.github.ybq.android.spinkit.sprite.Sprite;
+import com.github.ybq.android.spinkit.style.ThreeBounce;
 
 import edu.bluejack19_1.moment.EditProfileActivity;
 import edu.bluejack19_1.moment.R;
@@ -31,6 +37,7 @@ public class ProfileFragment extends Fragment {
 
     private PersonalPictureAdapter adapter;
     private PersonalPictureViewModel viewmodel;
+    private ProgressBar progressBar;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -46,10 +53,26 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        RecyclerView myPictures = view.findViewById(R.id.personal_recycler_view);
+        progressBar = view.findViewById(R.id.progress_bar);
+        Sprite sprite = new ThreeBounce();
+        sprite.setColor(Color.BLACK);
+        progressBar.setIndeterminateDrawable(sprite);
+        progressBar.setVisibility(View.VISIBLE);
+
+        final RecyclerView myPictures = view.findViewById(R.id.personal_recycler_view);
         adapter = new PersonalPictureAdapter(getContext());
         adapter.notifyDataSetChanged();
         myPictures.setAdapter(adapter);
+        myPictures.setVisibility(View.GONE);
+
+        myPictures.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                myPictures.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                myPictures.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
+            }
+        });
 
         viewmodel = ViewModelProviders.of(this).get(PersonalPictureViewModel.class);
         viewmodel.getPictures().observe(this, getPicture);

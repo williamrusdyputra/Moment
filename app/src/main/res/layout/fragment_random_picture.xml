@@ -5,6 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".fragment.RandomPictureFragment">
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_gravity="center"
+        android:elevation="8dp"
+        android:visibility="visible"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/staggered_rv"
         android:layout_width="match_parent"

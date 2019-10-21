@@ -1,6 +1,8 @@
 package edu.bluejack19_1.moment.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import edu.bluejack19_1.moment.ChatActivity;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.model.Chat;
 import edu.bluejack19_1.moment.model.User;
@@ -45,6 +48,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.username.setText(people.get(position).username);
         lastMessage(people.get(position).userID, holder.lastMessage);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatActivity.class);
+                Bundle data = new Bundle();
+                data.putParcelable("user", people.get(position));
+                intent.putExtra("bundle", data);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -52,7 +66,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
         return people.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder{
 
         TextView username, lastMessage;
         ImageView profileImage;
@@ -64,6 +78,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
             lastMessage = itemView.findViewById(R.id.last_message);
             profileImage = itemView.findViewById(R.id.profile_image);
         }
+
     }
 
     private void lastMessage(final String userID, final TextView lastMessage) {

@@ -1,6 +1,7 @@
 package edu.bluejack19_1.moment.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.bluejack19_1.moment.ImageDialog;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.util.Transformation;
 
@@ -40,14 +42,25 @@ public class PersonalPictureAdapter extends RecyclerView.Adapter<PersonalPicture
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PersonalPictureHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PersonalPictureHolder holder, final int position) {
 
         Glide.with(context)
                 .load(pictures.get(position))
-                .override(450, 450) //1
+                .override(1000, 1000) //1
                 .centerCrop()
                 .transform(new Transformation(90f))
                 .into(holder.picture);
+
+        holder.picture.setClickable(true);
+
+        holder.picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ImageDialog.class);
+                intent.putExtra("url", pictures.get(position));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
