@@ -36,6 +36,8 @@ public class User implements Parcelable {
     @PropertyName("liked_pictures")
     public List<String> likedPictures;
 
+    public List<String> dates;
+
     public User(String userID, String username, int postCount, int followerCount, int followingCount,
                 String description, String profilePictureUrl, List<String> pictureUrls,
                 List<String> followerIDs, List<String> followingIDs, List<String> followingIDKeys,
@@ -61,6 +63,7 @@ public class User implements Parcelable {
         followingIDKeys = new ArrayList<>();
         followerIDKeys = new ArrayList<>();
         likedPictures = new ArrayList<>();
+        dates = new ArrayList<>();
     }
 
     private User(Parcel in) {

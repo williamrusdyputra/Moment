@@ -139,9 +139,11 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             mAuth.createUserWithEmailAndPassword(email, password);
             DataUtil.storeUser(email, mDatabase);
-            Intent homeIntent = new Intent(SignUpActivity.this, HomeActivity.class);
+            Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
             DataUtil.username = email.split("@")[0];
-            startActivity(homeIntent);
+            intent.putExtra("email", email);
+            intent.putExtra("password", password);
+            startActivity(intent);
             finish();
         }
     }

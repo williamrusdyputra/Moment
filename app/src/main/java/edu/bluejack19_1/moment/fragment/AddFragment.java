@@ -57,8 +57,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -248,8 +251,18 @@ public class AddFragment extends Fragment {
                                             FirebaseDatabase database = FirebaseDatabase.getInstance();
                                             DatabaseReference myRef = database.getReference();
 
-                                            myRef.child("users").child(DataUtil.user.userID).child("picture_urls").push().setValue(imageURL);
-                                            myRef.child("users").child(DataUtil.user.userID).child("post_count").setValue(DataUtil.user.postCount+1);
+                                            String key = myRef.push().getKey();
+
+                                            Date date = new Date();
+                                            Calendar cal = Calendar.getInstance();
+                                            cal.setTime(date);
+                                            String currentDate = cal.get(Calendar.YEAR) + ", " + cal.get(Calendar.DAY_OF_MONTH) + " " + cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
+
+                                            if(key != null) {
+                                                myRef.child("users").child(DataUtil.user.userID).child("picture_urls").child(key).child("url").setValue(imageURL);
+                                                myRef.child("users").child(DataUtil.user.userID).child("picture_urls").child(key).child("date").setValue(currentDate);
+                                                myRef.child("users").child(DataUtil.user.userID).child("post_count").setValue(DataUtil.user.postCount + 1);
+                                            }
                                         }
                                     });
                                 }

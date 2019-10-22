@@ -70,9 +70,22 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
 
+        checkFromRegis();
+
         setupGoogleButton();
         setupFacebookButton();
         setupDefaultButton();
+    }
+
+    private void checkFromRegis() {
+
+        Intent intent = getIntent();
+
+        if(intent.hasExtra("email") && intent.hasExtra("password")) {
+            emailText.setText(intent.getStringExtra("email"));
+            passwordText.setText(intent.getStringExtra("password"));
+        }
+
     }
 
     private void init() {
@@ -86,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordText = findViewById(R.id.password_edit_text);
         TextView signUpText = findViewById(R.id.sign_up_text);
         TextView signUpText2 = findViewById(R.id.register_question);
+        sharedPref = this.getSharedPreferences(getString(R.string.user_pref_key), MODE_PRIVATE);
 
         signUpText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,20 +157,6 @@ public class LoginActivity extends AppCompatActivity {
                 // after text
             }
         });
-
-        sharedPref = this.getSharedPreferences(getString(R.string.user_pref_key), MODE_PRIVATE);
-        if(sharedPref.contains(getString(R.string.user_pref))) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    DataUtil.user.username = sharedPref.getString(getString(R.string.user_pref), "error").split("@")[0];
-                    Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
-                    homeIntent.putExtra(HomeActivity.EXTRA_DATA, DataUtil.user.username);
-                    startActivity(homeIntent);
-                    finish();
-                }
-            }, 1000);
-        }
     }
 
     private void setupFacebookButton() {

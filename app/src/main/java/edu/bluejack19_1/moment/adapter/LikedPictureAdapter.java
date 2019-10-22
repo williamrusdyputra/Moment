@@ -57,7 +57,6 @@ public class LikedPictureAdapter extends RecyclerView.Adapter<LikedPictureAdapte
                 .load(url)
                 .override(450, 450) //1
                 .centerCrop()
-                .transform(new Transformation(90f))
                 .into(holder.image);
 
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference();

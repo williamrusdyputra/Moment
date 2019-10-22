@@ -34,7 +34,7 @@ public class PersonalPictureViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     ArrayList<String> postUrls = new ArrayList<>();
                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                        postUrls.add(Objects.requireNonNull(ds.getValue()).toString());
+                        postUrls.add(Objects.requireNonNull(ds.child("url").getValue()).toString());
                     }
                     setData(postUrls);
                 }

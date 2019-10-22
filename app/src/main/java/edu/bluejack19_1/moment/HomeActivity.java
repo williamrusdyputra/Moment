@@ -15,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -24,15 +22,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 
 import edu.bluejack19_1.moment.fragment.AddFragment;
 import edu.bluejack19_1.moment.fragment.ExploreFragment;
 import edu.bluejack19_1.moment.fragment.HomeFragment;
 import edu.bluejack19_1.moment.fragment.LikedFragment;
 import edu.bluejack19_1.moment.fragment.ProfileFragment;
-import edu.bluejack19_1.moment.notification.Token;
 import edu.bluejack19_1.moment.util.DataUtil;
 
 import java.util.ArrayList;
@@ -111,8 +106,10 @@ public class HomeActivity extends AppCompatActivity {
                     DataSnapshot posts = ds.child("picture_urls");
                     Iterable<DataSnapshot> items = posts.getChildren();
                     ArrayList<String> postUrls = new ArrayList<>();
+                    ArrayList<String> dates = new ArrayList<>();
                     for(DataSnapshot item : items) {
-                        postUrls.add(item.getValue(String.class));
+                        postUrls.add(item.child("url").getValue(String.class));
+                        dates.add(item.child("date").getValue(String.class));
                     }
 
                     DataSnapshot followings = ds.child("followings");
@@ -163,6 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                     DataUtil.user.followerIDKeys = followerIDKeys;
                     DataUtil.user.followingIDKeys = followingIDKeys;
                     DataUtil.user.likedPictures = lp;
+                    DataUtil.user.dates = dates;
 
                     if(username.equals(name)) {
                         database.removeEventListener(this);
@@ -207,7 +205,7 @@ public class HomeActivity extends AppCompatActivity {
                     active = exploreFragment;
                     return true;
                 case R.id.action_liked:
-                    chatFab.setVisibility(View.VISIBLE);
+                    chatFab.setVisibility(View.GONE);
                     fragmentManager.beginTransaction().hide(active).show(likedFragment).commit();
                     active = likedFragment;
                     return true;
