@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import edu.bluejack19_1.moment.ChatActivity;
+import edu.bluejack19_1.moment.HomeActivity;
 import edu.bluejack19_1.moment.R;
+import edu.bluejack19_1.moment.fragment.HomeFragment;
 import edu.bluejack19_1.moment.model.User;
 import edu.bluejack19_1.moment.util.DataUtil;
 
@@ -171,6 +173,9 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
                     });
                     btn.setText(R.string.followed);
                 }
+
+                HomeFragment hf = (HomeFragment) ((HomeActivity) context).getSupportFragmentManager().getFragments().get(4);
+                hf.updateData();
             }
         });
 

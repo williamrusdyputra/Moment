@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +41,7 @@ public class HomeFragment extends Fragment {
     private StoryAdapter storyAdapter;
     private ArrayList<Story> storyList;
     private ProgressBar progressBar;
+    private HomePictureViewModel viewModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        HomePictureViewModel viewModel = ViewModelProviders.of(this).get(HomePictureViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(HomePictureViewModel.class);
         viewModel.getUrls().observe(this, observer);
 
         getStory();
@@ -93,6 +93,11 @@ public class HomeFragment extends Fragment {
             }
         }
     };
+
+    public void updateData() {
+        viewModel.getUrls().observe(this, observer);
+        getStory();
+    }
 
     private void getStory() {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("story");

@@ -45,7 +45,9 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
     }
 
     public void setData(Map<String, String> urls) {
+        this.map.clear();
         this.map = urls;
+        pictureUrls.clear();
         pictureUrls.addAll(map.keySet());
         notifyDataSetChanged();
     }

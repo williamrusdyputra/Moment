@@ -31,9 +31,12 @@ public class HomePictureViewModel extends ViewModel {
 
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     if(!Objects.equals(ds.child("user_id").getValue(), DataUtil.user.userID)) {
-                        for(DataSnapshot ds2 : ds.child("picture_urls").getChildren()) {
-                            map.put(Objects.requireNonNull(ds2.child("url").getValue()).toString(),
-                                    Objects.requireNonNull(ds.child("username").getValue()).toString());
+                        String userID = Objects.requireNonNull(ds.child("user_id").getValue()).toString();
+                        if(DataUtil.user.followingIDs.contains(userID)) {
+                            for (DataSnapshot ds2 : ds.child("picture_urls").getChildren()) {
+                                map.put(Objects.requireNonNull(ds2.child("url").getValue()).toString(),
+                                        Objects.requireNonNull(ds.child("username").getValue()).toString());
+                            }
                         }
                     }
                 }
@@ -54,8 +57,8 @@ public class HomePictureViewModel extends ViewModel {
     public LiveData<Map<String, String>> getUrls() {
         if(pictureUrls == null) {
             pictureUrls = new MutableLiveData<>();
-            updateUrls();
         }
+        updateUrls();
         return pictureUrls;
     }
 }

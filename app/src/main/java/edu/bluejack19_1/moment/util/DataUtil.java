@@ -31,6 +31,7 @@ public class DataUtil {
     }
 
     public static ArrayList<User> getUsers() {
+        people.clear();
         DatabaseReference database = FirebaseDatabase.getInstance().getReference();
 
         database.child("users").addListenerForSingleValueEvent(new ValueEventListener() {

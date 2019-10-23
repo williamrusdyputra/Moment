@@ -22,23 +22,19 @@ public class SplashScreen extends AwesomeSplash {
         configSplash.setRevealFlagX(Flags.REVEAL_RIGHT);
         configSplash.setRevealFlagY(Flags.REVEAL_BOTTOM);
 
-        configSplash.setLogoSplash(R.mipmap.ic_launcher);
+        configSplash.setOriginalHeight(800);
+        configSplash.setOriginalWidth(800);
+        configSplash.setLogoSplash(R.drawable.ic_launcher_hd);
         configSplash.setAnimLogoSplashDuration(2000);
         configSplash.setAnimLogoSplashTechnique(Techniques.ZoomIn);
 
-        configSplash.setOriginalHeight(350);
-        configSplash.setOriginalWidth(350);
         configSplash.setAnimPathStrokeDrawingDuration(3000);
         configSplash.setPathSplashStrokeSize(3);
         configSplash.setPathSplashStrokeColor(R.color.colorAccent);
         configSplash.setAnimPathFillingDuration(3000);
         configSplash.setPathSplashFillColor(R.color.white);
 
-        configSplash.setTitleSplash("Moment");
-        configSplash.setTitleTextColor(R.color.gray_scale);
-        configSplash.setTitleTextSize(30f);
-        configSplash.setAnimTitleDuration(2000);
-        configSplash.setAnimTitleTechnique(Techniques.Tada);
+        configSplash.setTitleSplash("");
     }
 
     @Override
