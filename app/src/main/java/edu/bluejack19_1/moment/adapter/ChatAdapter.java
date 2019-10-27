@@ -52,7 +52,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.message.setText(chat.getMessage());
 
         if(imageURL.equals("default")) {
-            holder.profileImage.setImageResource(R.mipmap.ic_launcher);
+            holder.profileImage.setImageResource(R.drawable.default_picture);
         } else {
             Glide.with(context)
                     .load(imageURL)

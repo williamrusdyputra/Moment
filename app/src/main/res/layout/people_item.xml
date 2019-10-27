@@ -19,7 +19,7 @@
         android:padding="4dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImageView"
+            android:id="@+id/user_image"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:padding="12dp"
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/circleImageView"
+            android:layout_toEndOf="@id/user_image"
             android:layout_toStartOf="@id/follow_button"
             tools:text="@string/username"
             tools:ignore="RtlSymmetry" />

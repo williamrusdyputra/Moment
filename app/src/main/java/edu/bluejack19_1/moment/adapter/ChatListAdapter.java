@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,16 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         holder.username.setText(people.get(position).username);
         lastMessage(people.get(position).userID, holder.lastMessage);
+
+        if(DataUtil.user.profilePictureUrl != null && DataUtil.user.profilePictureUrl.equals("default")) {
+            Glide.with(context)
+                    .load(R.drawable.default_picture)
+                    .into(holder.profileImage);
+        } else {
+            Glide.with(context)
+                    .load(DataUtil.user.profilePictureUrl)
+                    .into(holder.profileImage);
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

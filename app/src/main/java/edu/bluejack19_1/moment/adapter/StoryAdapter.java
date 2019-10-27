@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +67,15 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
         }
 
         if(holder.getAdapterPosition() == 0) {
+            if(DataUtil.user.profilePictureUrl != null && DataUtil.user.profilePictureUrl.equals("default")) {
+                Glide.with(context)
+                        .load(R.drawable.default_picture)
+                        .into(holder.storyPhoto);
+            } else {
+                Glide.with(context)
+                        .load(DataUtil.user.profilePictureUrl)
+                        .into(holder.storyPhoto);
+            }
             myStory(holder.addStoryText, holder.storyPlus, false);
         }
 
@@ -116,7 +126,17 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(position != 0) {
                     String username = dataSnapshot.child("username").getValue(String.class);
+                    String url = dataSnapshot.child("profile_picture_url").getValue(String.class);
                     viewHolder.storyUsername.setText(username);
+                    if(url != null && url.equals("default")) {
+                        Glide.with(context)
+                                .load(R.drawable.default_picture)
+                                .into(viewHolder.storyPhoto);
+                    } else {
+                        Glide.with(context)
+                                .load(url)
+                                .into(viewHolder.storyPhoto);
+                    }
                 }
             }
 

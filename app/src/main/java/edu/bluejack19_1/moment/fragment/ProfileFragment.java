@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,12 +23,26 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.github.ybq.android.spinkit.sprite.Sprite;
 import com.github.ybq.android.spinkit.style.ThreeBounce;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.bluejack19_1.moment.EditProfileActivity;
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.adapter.PersonalPictureAdapter;
+import edu.bluejack19_1.moment.util.DataUtil;
 import edu.bluejack19_1.moment.viewmodel.PersonalPictureViewModel;
 
 import java.util.List;
@@ -50,7 +65,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         progressBar = view.findViewById(R.id.progress_bar);
@@ -64,6 +79,11 @@ public class ProfileFragment extends Fragment {
         adapter.notifyDataSetChanged();
         myPictures.setAdapter(adapter);
         myPictures.setVisibility(View.GONE);
+
+        final CircleImageView profilePicture = view.findViewById(R.id.profile_picture);
+        Glide.with(this)
+                .load(R.drawable.default_picture)
+                .into(profilePicture);
 
         myPictures.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -135,6 +155,20 @@ public class ProfileFragment extends Fragment {
 
     public void updateData() {
         viewmodel.getPictures().observe(this, getPicture);
+        final CircleImageView profilePicture = Objects.requireNonNull(this.getView()).findViewById(R.id.profile_picture);
+        if(DataUtil.user.profilePictureUrl.equals("default")) {
+            Glide.with(this)
+                    .load(R.drawable.default_picture)
+                    .into(profilePicture);
+        } else {
+            Glide.with(this)
+                    .load(DataUtil.user.profilePictureUrl)
+                    .apply(new RequestOptions()
+                            .fitCenter()
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                            .override(Target.SIZE_ORIGINAL))
+                    .into(profilePicture);
+        }
     }
 
     public void setup(String description, int postCount, int followingCount, int followerCount) {

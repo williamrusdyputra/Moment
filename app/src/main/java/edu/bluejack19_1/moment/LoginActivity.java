@@ -302,6 +302,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
                 DataUtil.user.username = Objects.requireNonNull(account.getEmail()).split("@")[0];
+                DataUtil.user.profilePictureUrl = "default";
             }
         } catch (ApiException e) {
             Log.w("ERROR", "signInResult:failed code=" + e.getStatusCode());
@@ -348,6 +349,7 @@ public class LoginActivity extends AppCompatActivity {
     private void gotoHome(String username) {
         Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
         DataUtil.user.username = username;
+        DataUtil.user.profilePictureUrl = "default";
         homeIntent.putExtra(HomeActivity.EXTRA_DATA, username);
         startActivity(homeIntent);
         finish();

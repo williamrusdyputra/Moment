@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,6 +61,16 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
         final User user = people.get(position);
 
         holder.username.setText(user.username);
+
+        if(user.profilePictureUrl != null && user.profilePictureUrl.equals("default")) {
+            Glide.with(context)
+                    .load(R.drawable.default_picture)
+                    .into(holder.userImage);
+        } else {
+            Glide.with(context)
+                    .load(user.profilePictureUrl)
+                    .into(holder.userImage);
+        }
 
         if(DataUtil.user.followingIDs.contains(user.userID)) {
             holder.followButton.setText(R.string.followed);
@@ -237,12 +249,14 @@ public class PeopleListAdapter extends RecyclerView.Adapter<PeopleListAdapter.Pe
 
         Button followButton;
         TextView username;
+        ImageView userImage;
 
         PeopleHolder(@NonNull View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.people_name);
             followButton = itemView.findViewById(R.id.follow_button);
+            userImage = itemView.findViewById(R.id.user_image);
         }
     }
 }

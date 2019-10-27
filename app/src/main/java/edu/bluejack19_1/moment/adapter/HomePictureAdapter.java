@@ -16,6 +16,9 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -63,6 +66,20 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
     public void onBindViewHolder(@NonNull final PictureHolder holder, int position) {
         final String url = pictureUrls.get(position);
         holder.username.setText(map.get(url));
+
+        if(DataUtil.user.profilePictureUrl.equals("default")) {
+            Glide.with(context)
+                    .load(R.drawable.default_picture)
+                    .into(holder.profilePicture);
+        } else {
+            Glide.with(context)
+                    .load(DataUtil.user.profilePictureUrl)
+                    .apply(new RequestOptions()
+                            .fitCenter()
+                            .format(DecodeFormat.PREFER_ARGB_8888)
+                            .override(Target.SIZE_ORIGINAL))
+                    .into(holder.profilePicture);
+        }
 
         Glide.with(context)
                 .load(url)
@@ -129,7 +146,7 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
     class PictureHolder extends RecyclerView.ViewHolder {
 
         TextView username;
-        ImageView image;
+        ImageView image, profilePicture;
         FloatingActionButton likeButton;
 
         PictureHolder(@NonNull View itemView) {
@@ -137,6 +154,7 @@ public class HomePictureAdapter extends RecyclerView.Adapter<HomePictureAdapter.
 
             username = itemView.findViewById(R.id.people_list_name);
             image = itemView.findViewById(R.id.item_list_picture);
+            profilePicture = itemView.findViewById(R.id.profile_picture);
             likeButton = itemView.findViewById(R.id.like_fab);
         }
     }

@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView3"
+        android:id="@+id/profile_picture"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:padding="12dp"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView3"
+        app:layout_constraintStart_toEndOf="@+id/profile_picture"
         app:layout_constraintTop_toTopOf="parent"
         android:textColor="#000000"
         android:textStyle="bold"
@@ -37,7 +37,7 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/circleImageView3"
+        app:layout_constraintTop_toBottomOf="@+id/profile_picture"
         android:contentDescription="@string/image" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -186,7 +186,7 @@ public class ChatActivity extends AppCompatActivity {
                         mChat.add(chat);
                     }
 
-                    adapter = new ChatAdapter(ChatActivity.this, mChat, "default");
+                    adapter = new ChatAdapter(ChatActivity.this, mChat, user.profilePictureUrl);
                     recyclerView.setAdapter(adapter);
                 }
             }

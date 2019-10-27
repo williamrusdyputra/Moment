@@ -39,6 +39,7 @@
     <string name="todo">TODO</string>
     <string name="pictures">Pictures</string>
     <string name="people">People</string>
+    <string name="changes">Changes will be available when you launch the app again</string>
     <string name="my_story">My Story</string>
     <string name="add_story">Add Story</string>
     <string name="type_something">Type something..</string>
