@@ -111,7 +111,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                             DataUtil.user.profilePictureUrl = imageURL;
                                             DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference();
                                             ref2.child("users").child(DataUtil.user.userID).child("profile_picture_url").setValue(imageURL);
-                                            Toast.makeText(getApplicationContext(), R.string.changes, Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), R.string.changes, Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 }

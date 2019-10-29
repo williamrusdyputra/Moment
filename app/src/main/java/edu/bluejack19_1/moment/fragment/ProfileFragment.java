@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
     private PersonalPictureAdapter adapter;
     private PersonalPictureViewModel viewmodel;
     private ProgressBar progressBar;
+    private View view;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -61,7 +62,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        view = inflater.inflate(R.layout.fragment_profile, container, false);
+        return view;
     }
 
     @Override
@@ -155,7 +157,7 @@ public class ProfileFragment extends Fragment {
 
     public void updateData() {
         viewmodel.getPictures().observe(this, getPicture);
-        final CircleImageView profilePicture = Objects.requireNonNull(this.getView()).findViewById(R.id.profile_picture);
+        final CircleImageView profilePicture = view.findViewById(R.id.profile_picture);
         if(DataUtil.user.profilePictureUrl.equals("default")) {
             Glide.with(this)
                     .load(R.drawable.default_picture)

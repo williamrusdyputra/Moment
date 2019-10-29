@@ -78,7 +78,7 @@ public class RandomPictureFragment extends Fragment {
 
         for(int i = 0; i < 10; i++) {
             int width = 400;
-            int height = (int) (Math.random() * 150) + 650 + (int) (Math.random() * 50);
+            int height = (int) (Math.random() * 150) + 700 + (int) (Math.random() * 50);
             String url = "https://picsum.photos/" + width + "/" + height;
             urls.add(url);
         }
@@ -125,7 +125,7 @@ public class RandomPictureFragment extends Fragment {
 
                 while(size < nextLimit) {
                     int width = 200;
-                    int height = (int) (Math.random() * 150) + 650 + (int) (Math.random() * 50);
+                    int height = (int) (Math.random() * 150) + 700 + (int) (Math.random() * 50);
                     String url = "https://picsum.photos/" +  width + "/" + height;
 
                     urls.add(url);
