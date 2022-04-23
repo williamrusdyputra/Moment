@@ -82,6 +82,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 ref.child("users").child(DataUtil.user.userID).child("description").setValue(Objects.requireNonNull(textInputDescription.getEditText()).getText().toString());
 
                 DataUtil.user.description = textInputDescription.getEditText().getText().toString();
+                setResult(RESULT_OK);
 
                 finish();
             }
@@ -96,7 +97,10 @@ public class EditProfileActivity extends AppCompatActivity {
             if(requestCode == GALLERY_REQUEST_CODE) {
                 assert data != null;
                 final Uri image = data.getData();
-                profileImage.setImageURI(image);
+                Glide.with(this)
+                        .load(image)
+                        .apply(new RequestOptions().placeholder(R.drawable.default_picture))
+                        .into(profileImage);
 
                 final StorageReference ref = FirebaseStorage.getInstance().getReference().child("profile/" + UUID.randomUUID().toString());
                 if (image != null) {
@@ -111,7 +115,7 @@ public class EditProfileActivity extends AppCompatActivity {
                                             DataUtil.user.profilePictureUrl = imageURL;
                                             DatabaseReference ref2 = FirebaseDatabase.getInstance().getReference();
                                             ref2.child("users").child(DataUtil.user.userID).child("profile_picture_url").setValue(imageURL);
-                                            Toast.makeText(getApplicationContext(), R.string.changes, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), "Changes will appear after some time", Toast.LENGTH_LONG).show();
                                         }
                                     });
                                 }

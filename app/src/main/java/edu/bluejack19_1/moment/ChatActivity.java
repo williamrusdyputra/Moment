@@ -137,7 +137,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for(DataSnapshot ds : dataSnapshot.getChildren()) {
                     Token token = ds.getValue(Token.class);
-                    Data data = new Data(DataUtil.user.userID, R.mipmap.ic_launcher, username + ": " + message, "New Message", user.userID);
+                    Data data = new Data(DataUtil.user.userID, R.mipmap.ic_launcher, DataUtil.user.username + ": " + message, "New Message", user.userID);
 
                     assert token != null;
                     Sender sender = new Sender(data, token.getToken());

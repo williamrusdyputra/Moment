@@ -46,4 +46,5 @@
     <string name="nothing">nothing</string>
     <string name="empty_message">You can\'t send empty message</string>
     <string name="no_message">No Message</string>
+    <string name="remember_me">Remember me</string>
 </resources>

@@ -43,7 +43,8 @@ public class LikedFragment extends Fragment {
         RecyclerView likedRv = view.findViewById(R.id.liked_rv);
         likedRv.setHasFixedSize(true);
         likedRv.addItemDecoration(new DividerItemDecoration(likedRv.getContext(), DividerItemDecoration.HORIZONTAL));
-        likedRv.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        likedRv.setLayoutManager(manager);
 
         adapter = new LikedPictureAdapter(getContext());
         likedRv.setAdapter(adapter);

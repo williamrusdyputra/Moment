@@ -21,6 +21,13 @@
         <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 
+    <style name="CustomDesign" parent="Theme.AppCompat.Light.Dialog.Alert">>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid">
         <item name="titleTextStyle">@style/TitleTextStyle</item>
         <item name="displayOptions">showHome|showTitle</item>

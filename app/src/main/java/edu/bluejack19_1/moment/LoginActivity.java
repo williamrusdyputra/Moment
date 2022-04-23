@@ -12,7 +12,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private EditText emailText;
     private EditText passwordText;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,8 @@ public class LoginActivity extends AppCompatActivity {
         TextView signUpText = findViewById(R.id.sign_up_text);
         TextView signUpText2 = findViewById(R.id.register_question);
         sharedPref = this.getSharedPreferences(getString(R.string.user_pref_key), MODE_PRIVATE);
+        progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         signUpText2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,21 +318,27 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 final String email = emailText.getText().toString();
                 final String password = passwordText.getText().toString();
 
                 if(TextUtil.validate(email)) {
                     Toast.makeText(getApplicationContext(), getString(R.string.email_error), Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
                 } else {
                     mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
-                                        DataUtil.setSharedPreference(getApplicationContext(), sharedPref, email, password);
+                                        CheckBox checkBox = findViewById(R.id.checkBox);
+                                        if(checkBox.isChecked()) {
+                                            DataUtil.setSharedPreference(getApplicationContext(), sharedPref, email, password);
+                                        }
                                         gotoHome(email.split("@")[0]);
                                     } else {
                                         Toast.makeText(getApplicationContext(), getString(R.string.login_not_found), Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.INVISIBLE);
                                     }
                                 }
                             });
@@ -351,6 +362,7 @@ public class LoginActivity extends AppCompatActivity {
         DataUtil.user.username = username;
         DataUtil.user.profilePictureUrl = "default";
         homeIntent.putExtra(HomeActivity.EXTRA_DATA, username);
+        progressBar.setVisibility(View.INVISIBLE);
         startActivity(homeIntent);
         finish();
     }

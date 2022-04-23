@@ -21,11 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.bluejack19_1.moment.R;
 import edu.bluejack19_1.moment.util.DataUtil;
-import edu.bluejack19_1.moment.util.Transformation;
 
 public class LikedPictureAdapter extends RecyclerView.Adapter<LikedPictureAdapter.LikedPictureHolder> {
 
@@ -38,6 +38,7 @@ public class LikedPictureAdapter extends RecyclerView.Adapter<LikedPictureAdapte
 
     public void setData(List<String> urls) {
         this.urls.clear();
+        Collections.reverse(urls);
         this.urls.addAll(urls);
         notifyDataSetChanged();
     }

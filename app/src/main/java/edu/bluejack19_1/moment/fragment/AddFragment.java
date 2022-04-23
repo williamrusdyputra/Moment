@@ -1,7 +1,9 @@
 package edu.bluejack19_1.moment.fragment;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -205,11 +207,36 @@ public class AddFragment extends Fragment {
                         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                         byte[] bytes = new byte[buffer.capacity()];
                         buffer.get(bytes);
-                        save(bytes);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        choice(bytes);
                     }
                 }
+
+                private void choice(final byte[] bytes) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                    alertDialog.setTitle("Upload");
+                    alertDialog.setMessage("Do you want to upload the picture?");
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Upload", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            try {
+                                save(bytes);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    alertDialog.show();
+                }
+
                 private void save(byte[] bytes) throws IOException {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 

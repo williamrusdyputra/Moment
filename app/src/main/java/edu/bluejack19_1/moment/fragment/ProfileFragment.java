@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ import edu.bluejack19_1.moment.viewmodel.PersonalPictureViewModel;
 
 import java.util.List;
 import java.util.Objects;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProfileFragment extends Fragment {
 
@@ -135,9 +138,34 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), EditProfileActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 24);
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 24) {
+            if(resultCode == RESULT_OK) {
+                final TextView desc = Objects.requireNonNull(getView()).findViewById(R.id.profile_description);
+                final String[] newDesc = {""};
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(DataUtil.user.userID).child("description");
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        newDesc[0] = dataSnapshot.getValue(String.class);
+                        desc.setText(newDesc[0]);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        }
     }
 
     private Observer<List<String>> getPicture = new Observer<List<String>>() {
